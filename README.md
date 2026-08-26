@@ -20,8 +20,8 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows | `DevKit_<版本>_x64-setup.exe` | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | `DevKit_<版本>_amd64.deb` | 适用于 Debian/Ubuntu 系发行版 |
+| Windows | [DevKit_0.1.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.1.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.1.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.1.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版（CI 构建中，发布后立即可用） |
 
 安装后可通过 **应用内自动更新** 获取新版本（新版本发布后自动检测更新）。
 
