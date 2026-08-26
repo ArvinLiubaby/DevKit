@@ -30,11 +30,29 @@
 - **词级高亮**：修改行内精确标记被替换片段
 - **实时对比**：输入自动对比（300ms 防抖），完全一致时绿色卡片提示
 
+### 图片压缩转换工具
+
+- **格式互转**：PNG / JPG / WebP 三格式一键互转
+- **质量压缩**：0-100 质量滑块（JPEG / WebP），压缩率实时显示
+- **等比缩放**：1-200% 百分比缩放，EXIF 方向自动校正
+- **批量处理**：最多 20 张拖拽导入，统一设置批量处理，单张保存或全部导出
+
+### 优秀开源软件推荐
+
+- **精选软件**：Clash Verge Rev / Motrix / MusicFree / Notepad++ 等社区验证的优秀开源项目
+- **一键直达**：系统浏览器打开 GitHub 项目页，或复制项目链接
+
+### 快捷键管理
+
+- **全局快捷键**：应用后台或最小化时依然生效，每个工具预设一个快捷键，按下即唤起窗口并直达工具页（`Alt+J` JSON / `Alt+T` 时间戳 / `Alt+D` 对比 / `Alt+I` 图片 / `Alt+R` 推荐 / `Alt+K` 快捷键管理 / `Alt+Space` 唤起主窗口）
+- **可视化修改**：录制式修改组合键，实时生效并持久化；冲突检测、单条重置与全部重置
+
 ### 通用能力
 
 - **中英双语**：一键切换语言，界面文案与组件文案全量跟随，选择持久化
 - **深色模式**：太阳/月亮一键切换，全界面明暗适配
 - **状态保留**：切换工具页面后输入内容与设置原样恢复
+- **全局快捷键**：每个工具预设快捷键（可自定义），后台也能一键直达
 
 ## 📥 下载安装
 
@@ -42,8 +60,8 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows | [DevKit_0.2.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.3.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.2.0/DevKit_0.2.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2（v0.3.0 将随 WSL 构建同步发布） |
 
 安装后可通过 **应用内自动更新** 获取新版本（新版本发布后自动检测更新）。
 
@@ -54,8 +72,11 @@
 1. **JSON 格式化**：粘贴或输入 JSON 文本（支持各种非标准写法）→ 自动格式化并高亮展示 → 可折叠/展开任意层级 → 可直接编辑输出并同步回输入 → 一键复制
 2. **时间戳转换**：查看并复制当前时间戳 → 输入时间戳或日期时间，双向即时转换
 3. **文本对比**：两侧粘贴文本，自动对比并高亮差异行/词
+4. **图片压缩转换**：拖入图片 → 选择目标格式 / 质量 / 缩放 → 实时预览压缩效果 → 单张保存或全部导出
+5. **优秀开源软件**：浏览精选开源项目卡片 → 一键打开 GitHub 项目页或复制链接
+6. **快捷键**：查看全部全局快捷键 → 点击"修改"后直接按下新组合键，实时生效并持久化
 
-更多工具持续开发中（Base64 编解码、UUID 生成、哈希计算等）。
+> 提示：应用最小化或后台运行时，按下任意工具快捷键（如 `Alt+J`）即可唤起窗口并直达对应工具页。
 
 ## 🛠️ 开发指南
 
@@ -101,12 +122,15 @@ src/
 ├── tools/          # 工具模块（注册表驱动，懒加载）
 │   ├── json/       # JSON 格式化工具（core 逻辑 / highlight 高亮 / 视图）
 │   ├── timestamp/  # 时间戳转换工具
-│   └── diff/       # 文本对比工具
+│   ├── diff/       # 文本对比工具
+│   ├── image/      # 图片压缩转换工具（core 逻辑 / store 状态 / 视图）
+│   ├── recommend/  # 优秀开源软件推荐工具
+│   └── shortcut/   # 快捷键管理工具（配套 src-tauri/src/shortcuts.rs）
 ├── locales/        # 语言包（zh-CN / en-US）
 ├── i18n/           # vue-i18n 实例
 ├── stores/         # Pinia 状态（主题、语言、工具工作区）
 └── ...
-src-tauri/          # Tauri 后端（Rust）
+src-tauri/          # Tauri 后端（Rust，含全局快捷键管理 shortcuts.rs）
 ```
 
 ## 📄 开源协议

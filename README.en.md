@@ -30,11 +30,29 @@
 - **Word-level highlighting**: precise marking of replaced fragments within changed lines
 - **Live comparison**: diff runs automatically as you type (300ms debounce), with a green card when both sides are identical
 
+### Image Converter
+
+- **Format conversion**: one-click conversion between PNG / JPG / WebP
+- **Quality compression**: 0-100 quality slider (JPEG / WebP) with real-time compression ratio
+- **Resize**: 1-200% percentage scaling, EXIF orientation auto-corrected
+- **Batch processing**: up to 20 images via drag & drop, unified settings, save individually or export all
+
+### Open Source Picks
+
+- **Hand-picked software**: Clash Verge Rev / Motrix / MusicFree / Notepad++ and other community-verified open-source projects
+- **One-click access**: open the GitHub page in your system browser, or copy the project link
+
+### Shortcut Manager
+
+- **Global shortcuts**: keep working while the app runs in background or is minimized; every tool has a preset shortcut that brings the window to front and navigates directly (`Alt+J` JSON / `Alt+T` Timestamp / `Alt+D` Diff / `Alt+I` Image / `Alt+R` Picks / `Alt+K` Shortcuts / `Alt+Space` Main Window)
+- **Visual editing**: record a new combo with a key press, applied and persisted instantly; conflict detection, per-item reset and reset-all
+
 ### General
 
 - **Bilingual UI**: switch between Chinese and English with one click; all UI and component texts follow, preference is persisted
 - **Dark mode**: toggle between sun/moon with one click, fully adapted light/dark themes
 - **State persistence**: input content and settings are restored when switching between tools
+- **Global shortcuts**: every tool has a preset (customizable) shortcut for one-click access even in background
 
 ## 📥 Installation
 
@@ -42,8 +60,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows | [DevKit_0.2.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.3.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.2.0/DevKit_0.2.0_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 (v0.3.0 will follow with WSL build) |
 
 After installation, new versions are delivered via **in-app auto-update**.
 
@@ -54,8 +72,11 @@ Launch the app and pick a tool from the sidebar:
 1. **JSON Formatter**: paste or type JSON (including non-standard syntax) → auto-format with highlighting → fold/expand any level → edit the output and sync back to the input → copy with one click
 2. **Timestamp Converter**: view and copy the current timestamp → enter a timestamp or datetime for instant bidirectional conversion
 3. **Text Diff**: paste text on both sides, differences are highlighted automatically at line and word level
+4. **Image Converter**: drop in images → pick target format / quality / scale → preview compression live → save individually or export all
+5. **Open Source Picks**: browse hand-picked project cards → open the GitHub page or copy the link in one click
+6. **Shortcuts**: view all global shortcuts → click "Modify" and press a new combo, applied and persisted instantly
 
-More tools are under development (Base64 encode/decode, UUID generator, hash calculator, etc.).
+> Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly.
 
 ## 🛠️ Development
 
@@ -101,12 +122,15 @@ src/
 ├── tools/          # Tool modules (registry-driven, lazy-loaded)
 │   ├── json/       # JSON formatter (core logic / highlight / view)
 │   ├── timestamp/  # Timestamp converter
-│   └── diff/       # Text diff
+│   ├── diff/       # Text diff
+│   ├── image/      # Image converter (core logic / store state / view)
+│   ├── recommend/  # Open source picks
+│   └── shortcut/   # Shortcut manager (with src-tauri/src/shortcuts.rs)
 ├── locales/        # Locale packs (zh-CN / en-US)
 ├── i18n/           # vue-i18n instance
 ├── stores/         # Pinia state (theme, language, tool workspaces)
 └── ...
-src-tauri/          # Tauri backend (Rust)
+src-tauri/          # Tauri backend (Rust, incl. global shortcut manager shortcuts.rs)
 ```
 
 ## 📄 License
