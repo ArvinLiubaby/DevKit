@@ -243,29 +243,37 @@ const outputStats = computed(
 
 <template>
   <div class="json-tool" :class="{ dark: isDark }">
-    <n-space class="toolbar" align="center" :wrap="true">
-      <n-button type="primary" size="small" @click="run('format')">格式化</n-button>
-      <n-button size="small" @click="run('minify')">压缩</n-button>
-      <n-button size="small" @click="run('sort')">键排序</n-button>
-      <n-button size="small" @click="loadSample">载入示例</n-button>
-      <n-button size="small" @click="clearAll">清空</n-button>
-      <n-select v-model:value="indent" :options="indentOptions" size="small" class="indent-select" />
-      <n-switch v-model:value="autoFormat" size="small" />
-      <n-text depth="3" size="small">自动格式化</n-text>
-    </n-space>
+    <!-- 控制面板：操作按钮 + 设置开关，统一卡片容器分组展示 -->
+    <div class="control-panel">
+      <div class="control-row">
+        <n-space align="center" :wrap="true" class="btn-group">
+          <n-button type="primary" size="small" @click="run('format')">格式化</n-button>
+          <n-button size="small" @click="run('minify')">压缩</n-button>
+          <n-button size="small" @click="run('sort')">键排序</n-button>
+          <n-button size="small" @click="loadSample">载入示例</n-button>
+          <n-button size="small" @click="clearAll">清空</n-button>
+        </n-space>
+        <div class="row-divider" aria-hidden="true"></div>
+        <n-space align="center" :wrap="true" class="row-opts">
+          <n-select v-model:value="indent" :options="indentOptions" size="small" class="indent-select" />
+          <n-switch v-model:value="autoFormat" size="small" />
+          <n-text depth="3" size="small">自动格式化</n-text>
+        </n-space>
+      </div>
 
-    <!-- 修复开关行：总开关 + 三类修复项细分开关 -->
-    <n-space class="fix-bar" align="center" :wrap="true">
-      <n-switch v-model:value="autoFix" size="small" />
-      <n-text depth="3" size="small">自动修复非标准写法</n-text>
-      <n-divider vertical />
-      <n-switch v-model:value="fixOptions.looseSyntax" size="small" :disabled="!autoFix" />
-      <n-text depth="3" size="small">JSON5 宽容语法</n-text>
-      <n-switch v-model:value="fixOptions.nonJsonValues" size="small" :disabled="!autoFix" />
-      <n-text depth="3" size="small">undefined / NaN / Infinity</n-text>
-      <n-switch v-model:value="fixOptions.radixLiterals" size="small" :disabled="!autoFix" />
-      <n-text depth="3" size="small">八 / 二进制字面量</n-text>
-    </n-space>
+      <!-- 修复开关行：总开关 + 三类修复项细分开关 -->
+      <div class="control-row fix-row">
+        <n-switch v-model:value="autoFix" size="small" />
+        <n-text depth="3" size="small">自动修复非标准写法</n-text>
+        <n-divider vertical />
+        <n-switch v-model:value="fixOptions.looseSyntax" size="small" :disabled="!autoFix" />
+        <n-text depth="3" size="small">JSON5 宽容语法</n-text>
+        <n-switch v-model:value="fixOptions.nonJsonValues" size="small" :disabled="!autoFix" />
+        <n-text depth="3" size="small">undefined / NaN / Infinity</n-text>
+        <n-switch v-model:value="fixOptions.radixLiterals" size="small" :disabled="!autoFix" />
+        <n-text depth="3" size="small">八 / 二进制字面量</n-text>
+      </div>
+    </div>
 
     <n-alert v-if="error" type="error" class="error-alert" :show-icon="true">
       {{ error }}
@@ -293,20 +301,26 @@ const outputStats = computed(
     </div>
 
     <div class="panels">
-      <n-input
-        v-model:value="input"
-        type="textarea"
-        class="panel-input"
-        placeholder="粘贴或输入 JSON 内容…（支持单引号 / 注释 / 尾随逗号 / 裸键等非标准写法；Ctrl+Enter 格式化，Ctrl+Shift+Enter 压缩）"
-        :status="error ? 'error' : undefined"
-        :autosize="{ minRows: 16, maxRows: 32 }"
-        @keydown.ctrl.enter.prevent="run('format')"
-        @keydown.ctrl.shift.enter.prevent="run('minify')"
-      />
-      <div class="output-panel">
-        <div class="output-head">
+      <div class="input-panel panel">
+        <div class="panel-head">
+          <span class="panel-title">原始输入</span>
+        </div>
+        <n-input
+          v-model:value="input"
+          type="textarea"
+          class="panel-input"
+          placeholder="粘贴或输入 JSON 内容…（支持单引号 / 注释 / 尾随逗号 / 裸键等非标准写法；Ctrl+Enter 格式化，Ctrl+Shift+Enter 压缩）"
+          :status="error ? 'error' : undefined"
+          :autosize="{ minRows: 16, maxRows: 32 }"
+          @keydown.ctrl.enter.prevent="run('format')"
+          @keydown.ctrl.shift.enter.prevent="run('minify')"
+        />
+      </div>
+      <div class="output-panel panel">
+        <div class="panel-head">
+          <span class="panel-title">格式化输出</span>
           <n-text depth="3" size="small">点击行首箭头折叠 / 展开代码块</n-text>
-          <n-button size="tiny" secondary @click="copyOutput">复制结果</n-button>
+          <n-button size="tiny" secondary class="copy-btn" @click="copyOutput">复制结果</n-button>
         </div>
         <div class="output-body code-view">
           <template v-if="output">
@@ -334,8 +348,10 @@ const outputStats = computed(
     </div>
 
     <div class="stats">
-      <n-text depth="3" size="small">输入：{{ inputStats }}</n-text>
-      <n-text depth="3" size="small">输出：{{ outputStats }}</n-text>
+      <span class="stats-item">输入：{{ inputStats }}</span>
+      <span class="stats-item">输出：{{ outputStats }}</span>
+      <span class="stats-spacer"></span>
+      <n-text depth="3" size="small">Ctrl+Enter 格式化 · Ctrl+Shift+Enter 压缩</n-text>
     </div>
   </div>
 </template>
@@ -347,12 +363,32 @@ const outputStats = computed(
   height: 100%;
 }
 
-.toolbar {
-  margin-bottom: 8px;
+/* 控制面板：卡片容器，内部分行（操作按钮 / 修复开关） */
+.control-panel {
+  margin-bottom: 10px;
+  padding: 10px 12px 8px;
+  border: 1px solid rgba(128, 128, 128, 0.18);
+  border-radius: 8px;
+  background: rgba(128, 128, 128, 0.045);
 }
 
-.fix-bar {
-  margin-bottom: 8px;
+.control-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.control-row + .control-row {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(128, 128, 128, 0.2);
+}
+
+.row-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(128, 128, 128, 0.28);
 }
 
 .indent-select {
@@ -428,13 +464,7 @@ const outputStats = computed(
   min-height: 0;
 }
 
-.panel-input {
-  flex: 1;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 13px;
-}
-
-.output-panel {
+.panel {
   flex: 1;
   min-width: 0;
   min-height: 0;
@@ -442,11 +472,26 @@ const outputStats = computed(
   flex-direction: column;
 }
 
-.output-head {
+.panel-head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
   margin-bottom: 8px;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.copy-btn {
+  margin-left: auto;
+}
+
+.panel-input {
+  flex: 1;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
 }
 
 .output-body {
@@ -454,7 +499,7 @@ const outputStats = computed(
   min-height: 0;
   overflow: auto;
   border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 6px 0;
 }
 
@@ -553,7 +598,35 @@ const outputStats = computed(
 
 .stats {
   display: flex;
+  align-items: center;
   gap: 16px;
-  margin-top: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(128, 128, 128, 0.16);
+  font-size: 12.5px;
+  color: rgba(128, 128, 128, 0.85);
+}
+
+.stats-spacer {
+  flex: 1;
+}
+
+/* 深色模式：控制面板 / 状态栏适配 */
+.json-tool.dark .control-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.json-tool.dark .control-row + .control-row {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.json-tool.dark .row-divider {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.json-tool.dark .stats {
+  border-top-color: rgba(255, 255, 255, 0.12);
+  color: rgba(200, 200, 200, 0.75);
 }
 </style>
