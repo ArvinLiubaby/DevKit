@@ -155,7 +155,18 @@ function renderLine(text: string, highlights: Range[] | null): string {
         </div>
       </div>
     </div>
-    <n-empty v-else-if="identical" size="small" description="两侧文本完全一致，无差异" />
+    <!-- 完全一致：醒目绿色卡片提示 -->
+    <div v-else-if="identical" class="identical-card">
+      <div class="check-badge">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+        </svg>
+      </div>
+      <div class="identical-text">
+        <n-text strong class="identical-title">两侧文本完全一致，无差异</n-text>
+        <n-text depth="3" size="small">共 {{ stats?.total ?? 0 }} 行完全匹配</n-text>
+      </div>
+    </div>
     <n-empty
       v-else-if="diffResult"
       size="small"
@@ -273,6 +284,75 @@ function renderLine(text: string, highlights: Range[] | null): string {
 .right-col :deep(mark) {
   background: rgba(64, 200, 100, 0.35);
   border-radius: 2px;
+}
+
+/* 完全一致提示卡片：绿色主题 + 对勾徽标 + 弹入动画 */
+.identical-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 36px;
+  border: 1px dashed rgba(64, 200, 100, 0.55);
+  border-radius: 10px;
+  background: rgba(64, 200, 100, 0.07);
+  animation: pop-in 0.25s ease;
+}
+
+.check-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+}
+
+.check-badge svg {
+  width: 30px;
+  height: 30px;
+}
+
+.identical-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.identical-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c9a55;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.diff-tool.dark .identical-card {
+  border-color: rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.diff-tool.dark .identical-title {
+  color: #7be0a0;
+}
+
+.diff-tool.dark .check-badge {
+  box-shadow: 0 4px 14px rgba(74, 222, 128, 0.35);
 }
 
 .diff-tool.dark .d-del {
