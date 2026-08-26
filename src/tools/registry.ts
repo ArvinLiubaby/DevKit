@@ -32,4 +32,11 @@ export const tools: ToolMeta[] = [
     path: "/tools/timestamp-converter",
     component: () => import("./timestamp/TimestampToolView.vue"),
   },
+  {
+    id: "text-diff",
+    name: "文本对比",
+    category: "对比",
+    path: "/tools/text-diff",
+    component: () => import("./diff/DiffToolView.vue"),
+  },
 ];
