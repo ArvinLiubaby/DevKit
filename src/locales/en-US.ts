@@ -3,7 +3,8 @@ export default {
   app: {
     home: "Home",
     tools: "Tools",
-    darkMode: "Dark Mode",
+    switchLang: "Switch Language",
+    switchTheme: "Toggle Theme",
     aboutTitle: "Tool Placeholder",
     aboutDesc: "Tool modules under development, stay tuned",
   },

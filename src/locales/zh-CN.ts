@@ -3,7 +3,8 @@ export default {
   app: {
     home: "首页",
     tools: "工具",
-    darkMode: "深色模式",
+    switchLang: "切换语言",
+    switchTheme: "切换主题",
     aboutTitle: "工具占位页",
     aboutDesc: "工具模块开发中，敬请期待",
   },
