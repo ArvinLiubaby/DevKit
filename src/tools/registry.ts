@@ -25,4 +25,11 @@ export const tools: ToolMeta[] = [
     path: "/tools/json-formatter",
     component: () => import("./json/JsonToolView.vue"),
   },
+  {
+    id: "timestamp-converter",
+    name: "时间戳转换",
+    category: "转换",
+    path: "/tools/timestamp-converter",
+    component: () => import("./timestamp/TimestampToolView.vue"),
+  },
 ];
