@@ -312,6 +312,7 @@ const outputStats = computed(
           placeholder="粘贴或输入 JSON 内容…（支持单引号 / 注释 / 尾随逗号 / 裸键等非标准写法；Ctrl+Enter 格式化，Ctrl+Shift+Enter 压缩）"
           :status="error ? 'error' : undefined"
           :autosize="{ minRows: 16, maxRows: 32 }"
+          :theme-overrides="{ borderRadius: '8px' }"
           @keydown.ctrl.enter.prevent="run('format')"
           @keydown.ctrl.shift.enter.prevent="run('minify')"
         />
