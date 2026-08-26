@@ -37,11 +37,13 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "resources": ["icons/icon.ico"],
     "windows": {
       "nsis": {
         "installMode": "currentUser",
         "languages": ["SimpChinese", "English"],
-        "displayLanguageSelector": true
+        "displayLanguageSelector": true,
+        "installerHooks": "./installer.nsh"
       }
     },
     "linux": {
