@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, h } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   NLayout,
@@ -25,7 +25,16 @@ const menuOptions: MenuOption[] = [
     type: "group",
     label: "工具",
     key: "tools-group",
-    children: tools.map((t) => ({ label: t.name, key: t.path })),
+    children: tools.map((t) => ({
+      label: t.name,
+      key: t.path,
+      // 菜单图标：内联样式（icon 渲染函数在 NMenu 作用域执行，scoped class 不生效）
+      icon: () =>
+        h("img", {
+          src: t.icon,
+          style: { width: "16px", height: "16px", display: "block", flex: "none" },
+        }),
+    })),
   },
 ];
 

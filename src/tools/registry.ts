@@ -1,4 +1,7 @@
 import type { Component } from "vue";
+import jsonIcon from "../assets/icons/json.svg";
+import timeIcon from "../assets/icons/time.svg";
+import textIcon from "../assets/icons/text.svg";
 
 /**
  * 工具模块元数据：注册表驱动路由与侧边栏菜单。
@@ -13,6 +16,8 @@ export interface ToolMeta {
   category: string;
   /** 路由路径，如 /tools/json-formatter */
   path: string;
+  /** 侧边栏菜单图标（SVG 资源） */
+  icon: string;
   /** 懒加载组件 */
   component: () => Promise<Component>;
 }
@@ -23,6 +28,7 @@ export const tools: ToolMeta[] = [
     name: "JSON 格式化",
     category: "格式化",
     path: "/tools/json-formatter",
+    icon: jsonIcon,
     component: () => import("./json/JsonToolView.vue"),
   },
   {
@@ -30,6 +36,7 @@ export const tools: ToolMeta[] = [
     name: "时间戳转换",
     category: "转换",
     path: "/tools/timestamp-converter",
+    icon: timeIcon,
     component: () => import("./timestamp/TimestampToolView.vue"),
   },
   {
@@ -37,6 +44,7 @@ export const tools: ToolMeta[] = [
     name: "文本对比",
     category: "对比",
     path: "/tools/text-diff",
+    icon: textIcon,
     component: () => import("./diff/DiffToolView.vue"),
   },
 ];
