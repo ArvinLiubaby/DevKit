@@ -34,6 +34,10 @@ export default {
       name: "Image Converter",
       desc: "Convert PNG / JPG / WebP, compress quality, resize, batch process",
     },
+    recommend: {
+      name: "Open Source Picks",
+      desc: "Hand-picked excellent open-source software, one click to GitHub",
+    },
   },
   json: {
     format: "Format",
@@ -156,6 +160,32 @@ export default {
     err: {
       decodeFailed: "Image decode failed, format may be unsupported",
       encodeFailed: "Processing failed, image size may exceed the limit",
+    },
+  },
+  recommend: {
+    intro: "Hand-picked, community-verified open-source software, all free and open source. Click a card to visit its GitHub page.",
+    visit: "Visit Repo",
+    copyLink: "Copy Link",
+    copied: "Project link copied",
+    copyFailed: "Copy failed: {err}",
+    openFailed: "Failed to open link: {err}",
+    items: {
+      clashVerge: {
+        tag: "Network Proxy",
+        desc: "Tauri-based Clash Meta GUI client with powerful config management and flexible rules",
+      },
+      motrix: {
+        tag: "Downloader",
+        desc: "Cross-platform download manager supporting HTTP / FTP / BT / magnet links, clean UI",
+      },
+      musicFree: {
+        tag: "Music Player",
+        desc: "Plugin-based aggregating music player with extensible sources, ad-free",
+      },
+      notepadPlusPlus: {
+        tag: "Text Editor",
+        desc: "Lightweight code editor with syntax highlighting / tabs / macro recording, a Windows classic",
+      },
     },
   },
 };

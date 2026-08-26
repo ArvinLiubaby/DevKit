@@ -34,6 +34,10 @@ export default {
       name: "图片压缩转换",
       desc: "PNG / JPG / WebP 互转，质量压缩与缩放，批量处理",
     },
+    recommend: {
+      name: "优秀开源软件推荐",
+      desc: "精选社区验证的优秀开源软件，一键直达 GitHub",
+    },
   },
   json: {
     format: "格式化",
@@ -156,6 +160,32 @@ export default {
     err: {
       decodeFailed: "图片解码失败，格式可能不受支持",
       encodeFailed: "处理失败，图片尺寸可能超出限制",
+    },
+  },
+  recommend: {
+    intro: "精选经过社区验证的优秀开源软件，全部免费开源。点击卡片即可前往 GitHub 项目页查看详情。",
+    visit: "访问项目",
+    copyLink: "复制链接",
+    copied: "项目链接已复制",
+    copyFailed: "复制失败：{err}",
+    openFailed: "打开链接失败：{err}",
+    items: {
+      clashVerge: {
+        tag: "网络代理",
+        desc: "基于 Tauri 的 Clash Meta 图形客户端，配置管理强大，规则切换灵活，跨平台支持",
+      },
+      motrix: {
+        tag: "下载工具",
+        desc: "全平台高速下载工具，支持 HTTP / FTP / BT / 磁力链，界面简洁无广告",
+      },
+      musicFree: {
+        tag: "音乐播放",
+        desc: "插件化聚合音乐播放器，音源接口自由扩展，无广告免费听歌",
+      },
+      notepadPlusPlus: {
+        tag: "文本编辑",
+        desc: "轻量级代码编辑器，语法高亮 / 多标签 / 宏录制，Windows 平台经典必备",
+      },
     },
   },
 };
