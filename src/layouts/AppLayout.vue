@@ -17,6 +17,15 @@ import { tools } from "../tools/registry";
 const themeStore = useThemeStore();
 const route = useRoute();
 const router = useRouter();
+const isDark = computed(() => themeStore.theme === "dark");
+
+// 菜单主题：选中项用品牌蓝淡色背景，替代默认绿色，与导航栏整体更协调
+const menuThemeOverrides = computed(() => ({
+  itemColorActive: isDark.value ? "rgba(64, 152, 252, 0.24)" : "rgba(64, 152, 252, 0.12)",
+  itemTextColorActive: isDark.value ? "#7cb8ff" : "#1a6fd4",
+  itemColorActiveHover: isDark.value ? "rgba(64, 152, 252, 0.24)" : "rgba(64, 152, 252, 0.12)",
+  itemTextColorActiveHover: isDark.value ? "#7cb8ff" : "#1a6fd4",
+}));
 
 // 菜单由工具注册表驱动，新工具注册后自动出现在侧边栏
 const menuOptions: MenuOption[] = [
@@ -47,8 +56,21 @@ function handleMenuSelect(key: string) {
 
 <template>
   <n-layout has-sider class="app-shell">
-    <n-layout-sider bordered :width="220" collapse-mode="width" :collapsed-width="0" show-trigger>
-      <n-menu :options="menuOptions" :value="activeKey" @update:value="handleMenuSelect" />
+    <n-layout-sider
+      bordered
+      class="app-sider"
+      :class="{ dark: isDark }"
+      :width="220"
+      collapse-mode="width"
+      :collapsed-width="0"
+      show-trigger
+    >
+      <n-menu
+        :options="menuOptions"
+        :value="activeKey"
+        :theme-overrides="menuThemeOverrides"
+        @update:value="handleMenuSelect"
+      />
     </n-layout-sider>
     <n-layout>
       <n-layout-header bordered class="app-header">
@@ -71,6 +93,15 @@ function handleMenuSelect(key: string) {
 <style scoped>
 .app-shell {
   height: 100vh;
+}
+
+/* 导航栏与工作区拉开层次：浅色浅灰 / 深色深灰，避免与内容区融为一体 */
+.app-sider {
+  background: #f5f6f8;
+}
+
+.app-sider.dark {
+  background: #1a1c21;
 }
 
 .app-header {
