@@ -199,6 +199,8 @@ async function copyWelcome() {
 
 .tool-desc {
   font-size: 12.5px;
+  /* 统一中英文字体链：避免混排时中文（雅黑）与英文（Segoe UI）基线错位 */
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
   color: rgba(128, 128, 128, 0.9);
   overflow: hidden;
   text-overflow: ellipsis;
