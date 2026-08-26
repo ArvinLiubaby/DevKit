@@ -153,6 +153,8 @@ async function copyWelcome() {
   border: 1px solid rgba(128, 128, 128, 0.25);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.55);
+  /* 覆盖 <a> 默认链接蓝色：颜色跟随主题文字色（浅色深灰 / 深色浅灰） */
+  color: inherit;
   text-decoration: none;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
   /* backwards：仅在延迟期应用起始态，结束后释放 transform，避免压过 hover 上浮 */
