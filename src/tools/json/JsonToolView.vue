@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, watch } from "vue";
+import { computed, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import {
   NAlert,
@@ -34,6 +34,9 @@ const { input, output, error, indent, autoFormat, autoFix, lastReport, collapsed
   storeToRefs(store);
 // reactive 对象直接从 store 取（保持响应式，且可直接传给 core 函数）
 const fixOptions = store.fixOptions;
+
+// 修复报告默认折叠，避免高亮提示干扰主要操作区
+const reportCollapsed = ref(true);
 
 const indentOptions = [
   { label: "2 空格", value: 2 },
@@ -268,20 +271,26 @@ const outputStats = computed(
       {{ error }}
     </n-alert>
 
-    <!-- 修复报告：展示本次自动修复了哪些非标准写法 -->
-    <n-alert
-      v-if="reportLines.length"
-      type="info"
-      class="error-alert"
-      :show-icon="true"
-      closable
-      @close="lastReport = null"
-    >
-      <template #header>已自动修复非标准写法</template>
-      <ul class="report-list">
+    <!-- 修复报告：默认折叠的弱化提示条，点击标题展开 / 收起详情 -->
+    <div v-if="reportLines.length" class="fix-report">
+      <button class="fix-report-head" type="button" @click="reportCollapsed = !reportCollapsed">
+        <svg
+          class="fix-report-chevron"
+          :class="{ open: !reportCollapsed }"
+          viewBox="0 0 16 16"
+          aria-hidden="true"
+        >
+          <path fill="currentColor" d="M6 3.5l4.5 4.5L6 12.5l-1-1L8.5 8 5 4.5z" />
+        </svg>
+        <span>已自动修复 {{ reportLines.length }} 类非标准写法</span>
+      </button>
+      <button class="fix-report-close" type="button" title="关闭提示" @click="lastReport = null">
+        ×
+      </button>
+      <ul v-show="!reportCollapsed" class="report-list">
         <li v-for="line in reportLines" :key="line">{{ line }}</li>
       </ul>
-    </n-alert>
+    </div>
 
     <div class="panels">
       <n-input
@@ -352,6 +361,60 @@ const outputStats = computed(
 
 .error-alert {
   margin-bottom: 8px;
+}
+
+/* 修复报告：弱化提示条（默认折叠） */
+.fix-report {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 5px 28px 5px 10px;
+  border: 1px solid rgba(128, 128, 128, 0.22);
+  border-radius: 6px;
+  background: rgba(128, 128, 128, 0.06);
+  font-size: 13px;
+}
+
+.fix-report-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fix-report-chevron {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: rgba(128, 128, 128, 0.8);
+  transition: transform 0.15s ease;
+}
+
+.fix-report-chevron.open {
+  transform: rotate(90deg);
+}
+
+.fix-report-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: rgba(128, 128, 128, 0.7);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fix-report-close:hover {
+  color: inherit;
 }
 
 .report-list {
