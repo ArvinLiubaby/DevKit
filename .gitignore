@@ -14,6 +14,7 @@ dist-ssr
 
 # Tauri build artifacts
 src-tauri/target
+src-tauri/gen
 
 # Tauri updater signing keys（绝不可提交！）
 src-tauri/.tauri*

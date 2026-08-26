@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- 蓝→青背景渐变 -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A45B7"/>
+      <stop offset="55%" stop-color="#0E5FBF"/>
+      <stop offset="100%" stop-color="#00B8D9"/>
+    </linearGradient>
+    <!-- 内衬渐变（更饱和） -->
+    <linearGradient id="inner" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08379B"/>
+      <stop offset="60%" stop-color="#0B52B8"/>
+      <stop offset="100%" stop-color="#00A6CC"/>
+    </linearGradient>
+    <!-- 顶部玻璃高光 -->
+    <linearGradient id="sheen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28"/>
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 白色符号发光（温和） -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 投影 -->
+  <ellipse cx="512" cy="980" rx="330" ry="34" fill="#000000" opacity="0.22">
+    <animate attributeName="opacity" values="0.22" dur="1s"/>
+  </ellipse>
+  <ellipse cx="512" cy="980" rx="330" ry="34" fill="#000000" opacity="0.22" filter="url(#glow)"/>
+
+  <!-- 圆角方块容器 -->
+  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#bg)"/>
+  <!-- 内衬 -->
+  <rect x="48" y="48" width="928" height="928" rx="212" fill="url(#inner)"/>
+  <!-- 顶部玻璃高光 -->
+  <rect x="48" y="48" width="928" height="480" rx="212" fill="url(#sheen)"/>
+
+  <!-- ===== 白色发光符号 ===== -->
+  <g filter="url(#glow)">
+    <!-- 齿轮（左，中心 340,512） -->
+    <g>
+      <circle cx="340" cy="512" r="190" fill="#FFFFFF"/>
+      <g fill="#FFFFFF">
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(0 340 512)"/>
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(60 340 512)"/>
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(120 340 512)"/>
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(180 340 512)"/>
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(240 340 512)"/>
+        <rect x="306" y="248" width="68" height="210" rx="22" transform="rotate(300 340 512)"/>
+      </g>
+      <!-- 中心孔：用内衬渐变填充，与背景无缝衔接 -->
+      <circle cx="340" cy="512" r="84" fill="url(#inner)"/>
+    </g>
+    <!-- </> 符号（右，紧贴齿轮） -->
+    <g fill="none" stroke="#FFFFFF" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+      <!-- < -->
+      <polyline points="680,388 545,512 680,636"/>
+      <!-- > -->
+      <polyline points="750,388 860,512 750,636"/>
+    </g>
+  </g>
+</svg>
