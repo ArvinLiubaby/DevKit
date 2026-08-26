@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from "vue";
+import { computed, onUnmounted, watch } from "vue";
+import { storeToRefs } from "pinia";
 import {
   NAlert,
   NButton,
@@ -15,35 +16,30 @@ import {
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import {
   buildFoldRanges,
-  defaultFixOptions,
   describeParseError,
   formatJson,
   minifyJson,
   sortJsonKeys,
-  type FixOptions,
   type FixReport,
 } from "./core";
 import { highlightJson } from "./highlight";
 import { useThemeStore } from "../../stores/theme";
+import { useJsonToolStore } from "../../stores/jsonTool";
 
 const message = useMessage();
 
-const input = ref("");
-const output = ref("");
-const error = ref("");
-const indent = ref<number | string>(2);
-const autoFormat = ref(true);
-// 自动修复：总开关 + 修复项细分开关（默认全部开启）
-const autoFix = ref(true);
-const fixOptions = reactive<FixOptions>({ ...defaultFixOptions });
-const lastReport = ref<FixReport | null>(null);
+// 工作区状态提升到全局 store：切页返回后输入 / 输出 / 设置 / 折叠状态原样恢复
+const store = useJsonToolStore();
+const { input, output, error, indent, autoFormat, autoFix, lastReport, collapsedLines } =
+  storeToRefs(store);
+// reactive 对象直接从 store 取（保持响应式，且可直接传给 core 函数）
+const fixOptions = store.fixOptions;
 
 const indentOptions = [
   { label: "2 空格", value: 2 },
   { label: "4 空格", value: 4 },
   { label: "Tab", value: "\t" },
 ];
-
 // 示例刻意使用多种非标准写法，用于演示自动修复能力
 const sampleJson = `{
   // 工具信息（行注释）
@@ -94,8 +90,7 @@ const lines = computed(() => (output.value ? output.value.split("\n") : []));
 const lineHtmls = computed(() => lines.value.map((line) => highlightJson(line)));
 // 折叠起点行 → 结束行（0-based），由输出行结构括号匹配得到
 const foldRanges = computed(() => buildFoldRanges(lines.value));
-// 已折叠的起点行集合
-const collapsedLines = ref<Set<number>>(new Set());
+// 已折叠的起点行集合（状态在 store，切页返回后折叠结构不变）
 
 interface RenderLine {
   index: number;
@@ -142,6 +137,10 @@ function toggleFold(lineIndex: number) {
 
 // 输入变化时防抖自动格式化，实现"输入即所得"
 let debounceTimer: number | undefined;
+// 组件卸载时清理未触发的防抖任务，避免切页后仍在后台格式化
+onUnmounted(() => {
+  window.clearTimeout(debounceTimer);
+});
 watch(input, () => {
   if (!autoFormat.value) return;
   window.clearTimeout(debounceTimer);
@@ -229,12 +228,7 @@ function loadSample() {
   input.value = sampleJson;
 }
 
-function clearAll() {
-  input.value = "";
-  output.value = "";
-  error.value = "";
-  lastReport.value = null;
-}
+const clearAll = store.clearAll;
 
 const inputStats = computed(
   () => `${input.value.length} 字符 · ${input.value ? input.value.split("\n").length : 0} 行`,
