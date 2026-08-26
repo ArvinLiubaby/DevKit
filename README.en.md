@@ -42,8 +42,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows | [DevKit_0.1.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.1.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.1.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.1.0_amd64.deb) | For Debian/Ubuntu-based distros (CI build in progress, available after release) |
+| Windows | [DevKit_0.2.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.2.0_amd64.deb) | For Debian/Ubuntu-based distros (pending CI build after configuring signing keys) |
 
 After installation, new versions are delivered via **in-app auto-update**.
 
