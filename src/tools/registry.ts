@@ -18,6 +18,8 @@ export interface ToolMeta {
   path: string;
   /** 侧边栏菜单图标（SVG 资源） */
   icon: string;
+  /** 一句话功能描述（首页卡片展示） */
+  description: string;
   /** 懒加载组件 */
   component: () => Promise<Component>;
 }
@@ -29,6 +31,7 @@ export const tools: ToolMeta[] = [
     category: "格式化",
     path: "/tools/json-formatter",
     icon: jsonIcon,
+    description: "格式化 / 压缩 / 键排序，非标准写法自动修复",
     component: () => import("./json/JsonToolView.vue"),
   },
   {
@@ -37,6 +40,7 @@ export const tools: ToolMeta[] = [
     category: "转换",
     path: "/tools/timestamp-converter",
     icon: timeIcon,
+    description: "Unix 时间戳与可读日期时间双向转换",
     component: () => import("./timestamp/TimestampToolView.vue"),
   },
   {
@@ -45,6 +49,7 @@ export const tools: ToolMeta[] = [
     category: "对比",
     path: "/tools/text-diff",
     icon: textIcon,
+    description: "行级 Diff 对比，修改行词级高亮",
     component: () => import("./diff/DiffToolView.vue"),
   },
 ];
