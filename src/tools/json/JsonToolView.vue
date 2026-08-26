@@ -38,6 +38,29 @@ const fixOptions = store.fixOptions;
 // 修复报告默认折叠，避免高亮提示干扰主要操作区
 const reportCollapsed = ref(true);
 
+/* 输出编辑模式：修改内容防抖同步回原始输入，输入变化再自动格式化回流 */
+const editing = ref(false);
+const editableOutput = ref("");
+let editSyncTimer: number | undefined;
+
+function enterEdit() {
+  editableOutput.value = output.value;
+  editing.value = true;
+}
+
+function exitEdit() {
+  // 退出前兜底同步一次，避免防抖未触发导致最后修改丢失
+  if (editableOutput.value !== input.value) input.value = editableOutput.value;
+  editing.value = false;
+}
+
+function onEditOutput() {
+  window.clearTimeout(editSyncTimer);
+  editSyncTimer = window.setTimeout(() => {
+    if (editableOutput.value !== input.value) input.value = editableOutput.value;
+  }, 400);
+}
+
 const indentOptions = [
   { label: "2 空格", value: 2 },
   { label: "4 空格", value: 4 },
@@ -143,6 +166,7 @@ let debounceTimer: number | undefined;
 // 组件卸载时清理未触发的防抖任务，避免切页后仍在后台格式化
 onUnmounted(() => {
   window.clearTimeout(debounceTimer);
+  window.clearTimeout(editSyncTimer);
 });
 watch(input, () => {
   if (!autoFormat.value) return;
@@ -320,10 +344,23 @@ const outputStats = computed(
       <div class="output-panel panel">
         <div class="panel-head">
           <span class="panel-title">格式化输出</span>
-          <n-text depth="3" size="small">点击行首箭头折叠 / 展开代码块</n-text>
-          <n-button size="tiny" secondary class="copy-btn" @click="copyOutput">复制结果</n-button>
+          <n-text v-if="!editing" depth="3" size="small">点击行首箭头折叠 / 展开代码块</n-text>
+          <n-text v-else depth="3" size="small">修改将自动同步到原始输入</n-text>
+          <div class="head-actions">
+            <n-button v-if="editing" size="tiny" secondary @click="exitEdit">完成</n-button>
+            <n-button v-else size="tiny" secondary @click="enterEdit">编辑</n-button>
+            <n-button size="tiny" secondary @click="copyOutput">复制结果</n-button>
+          </div>
         </div>
-        <div class="output-body code-view">
+        <div v-if="editing" class="output-edit">
+          <textarea
+            v-model="editableOutput"
+            class="output-edit-area"
+            spellcheck="false"
+            @input="onEditOutput"
+          ></textarea>
+        </div>
+        <div v-else class="output-body code-view">
           <template v-if="output">
             <div v-for="line in renderLines" :key="line.index" class="code-line">
               <button
@@ -485,7 +522,10 @@ const outputStats = computed(
   font-weight: 600;
 }
 
-.copy-btn {
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-left: auto;
 }
 
@@ -502,6 +542,33 @@ const outputStats = computed(
   border: 1px solid rgba(128, 128, 128, 0.3);
   border-radius: 8px;
   padding: 6px 0;
+}
+
+/* 输出编辑模式 */
+.output-edit {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.output-edit-area {
+  flex: 1;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.output-edit-area:focus {
+  border-color: #4098fc;
 }
 
 /* 代码折叠行 */
