@@ -1,5 +1,5 @@
 /**
- * 优秀开源软件推荐 core：推荐清单静态数据（名称 / 仓库 / 描述 / 标签 i18n key）。
+ * 优秀开源软件 core：推荐清单静态数据（名称 / 仓库 / 描述 / 标签 i18n key）。
  * 描述与标签为双语 key（recommend.items.{id}.desc / .tag），由视图层翻译。
  */
 export interface OpenSourceItem {

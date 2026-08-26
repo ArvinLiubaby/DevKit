@@ -35,7 +35,7 @@ export default {
       desc: "PNG / JPG / WebP 互转，质量压缩与缩放，批量处理",
     },
     recommend: {
-      name: "优秀开源软件推荐",
+      name: "优秀开源软件",
       desc: "精选社区验证的优秀开源软件，一键直达 GitHub",
     },
   },
