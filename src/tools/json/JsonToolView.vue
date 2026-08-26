@@ -347,9 +347,44 @@ const outputStats = computed(
           <n-text v-if="!editing" depth="3" size="small">点击行首箭头折叠 / 展开代码块</n-text>
           <n-text v-else depth="3" size="small">修改将自动同步到原始输入</n-text>
           <div class="head-actions">
-            <n-button v-if="editing" size="tiny" secondary @click="exitEdit">完成</n-button>
-            <n-button v-else size="tiny" secondary @click="enterEdit">编辑</n-button>
-            <n-button size="tiny" secondary @click="copyOutput">复制结果</n-button>
+            <n-button
+              v-if="editing"
+              type="primary"
+              size="tiny"
+              @click="exitEdit"
+            >
+              <template #icon>
+                <svg viewBox="0 0 24 24" class="btn-icon" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                  />
+                </svg>
+              </template>
+              完成
+            </n-button>
+            <n-button v-else size="tiny" secondary @click="enterEdit">
+              <template #icon>
+                <svg viewBox="0 0 24 24" class="btn-icon" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                  />
+                </svg>
+              </template>
+              编辑
+            </n-button>
+            <n-button size="tiny" secondary @click="copyOutput">
+              <template #icon>
+                <svg viewBox="0 0 24 24" class="btn-icon" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                  />
+                </svg>
+              </template>
+              复制结果
+            </n-button>
           </div>
         </div>
         <div v-if="editing" class="output-edit">
@@ -527,6 +562,11 @@ const outputStats = computed(
   align-items: center;
   gap: 8px;
   margin-left: auto;
+}
+
+.btn-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .panel-input {
