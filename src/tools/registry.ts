@@ -2,6 +2,7 @@ import type { Component } from "vue";
 import jsonIcon from "../assets/icons/json.svg";
 import timeIcon from "../assets/icons/time.svg";
 import textIcon from "../assets/icons/text.svg";
+import imageIcon from "../assets/icons/image.svg";
 
 /**
  * 工具模块元数据：注册表驱动路由与侧边栏菜单。
@@ -51,5 +52,14 @@ export const tools: ToolMeta[] = [
     icon: textIcon,
     descKey: "tools.diff.desc",
     component: () => import("./diff/DiffToolView.vue"),
+  },
+  {
+    id: "image-converter",
+    nameKey: "tools.image.name",
+    category: "转换",
+    path: "/tools/image-converter",
+    icon: imageIcon,
+    descKey: "tools.image.desc",
+    component: () => import("./image/ImageToolView.vue"),
   },
 ];
