@@ -7,14 +7,15 @@ const pad = (n: number, width = 2) => String(n).padStart(width, "0");
 /** 时间戳精度：10 位秒、13 位毫秒、16 位微秒 */
 export type TsUnit = "s" | "ms" | "us";
 
-const UNIT_LABEL: Record<TsUnit, string> = {
-  s: "秒",
-  ms: "毫秒",
-  us: "微秒",
+const UNIT_LABEL: Record<TsUnit, Record<"zh" | "en", string>> = {
+  s: { zh: "秒 (s)", en: "Seconds (s)" },
+  ms: { zh: "毫秒 (ms)", en: "Milliseconds (ms)" },
+  us: { zh: "微秒 (μs)", en: "Microseconds (μs)" },
 };
 
-export function unitLabel(unit: TsUnit): string {
-  return UNIT_LABEL[unit];
+/** 单位标签：中英双语（zh: 秒 (s) / en: Seconds (s)） */
+export function unitLabel(unit: TsUnit, lang: "zh" | "en" = "zh"): string {
+  return UNIT_LABEL[unit][lang];
 }
 
 /** 检测时间戳精度，非纯数字返回 null */
@@ -68,19 +69,26 @@ export function formatTimezoneOffset(date: Date): string {
   return `UTC${sign}${pad(Math.floor(abs / 60))}:${pad(abs % 60)}`;
 }
 
-/** 距今描述：3 天 5 小时后 / 2 小时前 */
-export function formatElapsed(date: Date, now: Date = new Date()): string {
+/** 距今描述：中英双语（zh: 3 天 5 小时后 / en: 3d 5h later） */
+export function formatElapsed(date: Date, now: Date = new Date(), lang: "zh" | "en" = "zh"): string {
   const diff = date.getTime() - now.getTime();
   const abs = Math.abs(diff);
-  const suffix = diff >= 0 ? "后" : "前";
+  const suffix =
+    diff >= 0 ? (lang === "zh" ? "后" : " later") : lang === "zh" ? "前" : " ago";
   const days = Math.floor(abs / 86_400_000);
   const hours = Math.floor((abs % 86_400_000) / 3_600_000);
   const minutes = Math.floor((abs % 3_600_000) / 60_000);
   const seconds = Math.floor((abs % 60_000) / 1000);
-  if (days > 0) return `${days} 天 ${hours} 小时${suffix}`;
-  if (hours > 0) return `${hours} 小时 ${minutes} 分钟${suffix}`;
-  if (minutes > 0) return `${minutes} 分钟 ${seconds} 秒${suffix}`;
-  return `${seconds} 秒${suffix}`;
+  if (lang === "zh") {
+    if (days > 0) return `${days} 天 ${hours} 小时${suffix}`;
+    if (hours > 0) return `${hours} 小时 ${minutes} 分钟${suffix}`;
+    if (minutes > 0) return `${minutes} 分钟 ${seconds} 秒${suffix}`;
+    return `${seconds} 秒${suffix}`;
+  }
+  if (days > 0) return `${days}d ${hours}h${suffix}`;
+  if (hours > 0) return `${hours}h ${minutes}m${suffix}`;
+  if (minutes > 0) return `${minutes}m ${seconds}s${suffix}`;
+  return `${seconds}s${suffix}`;
 }
 
 /**

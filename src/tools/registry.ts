@@ -10,16 +10,16 @@ import textIcon from "../assets/icons/text.svg";
 export interface ToolMeta {
   /** 唯一 ID（同时用作路由 name） */
   id: string;
-  /** 显示名称 */
-  name: string;
+  /** 工具名 i18n key（如 tools.json.name） */
+  nameKey: string;
   /** 分类（格式化 / 编解码 / 生成器 …），将来用于菜单分组 */
   category: string;
   /** 路由路径，如 /tools/json-formatter */
   path: string;
   /** 侧边栏菜单图标（SVG 资源） */
   icon: string;
-  /** 一句话功能描述（首页卡片展示） */
-  description: string;
+  /** 一句话功能描述 i18n key（首页卡片展示） */
+  descKey: string;
   /** 懒加载组件 */
   component: () => Promise<Component>;
 }
@@ -27,29 +27,29 @@ export interface ToolMeta {
 export const tools: ToolMeta[] = [
   {
     id: "json-formatter",
-    name: "JSON 格式化",
+    nameKey: "tools.json.name",
     category: "格式化",
     path: "/tools/json-formatter",
     icon: jsonIcon,
-    description: "格式化 / 压缩 / 键排序，非标准写法自动修复",
+    descKey: "tools.json.desc",
     component: () => import("./json/JsonToolView.vue"),
   },
   {
     id: "timestamp-converter",
-    name: "时间戳转换",
+    nameKey: "tools.timestamp.name",
     category: "转换",
     path: "/tools/timestamp-converter",
     icon: timeIcon,
-    description: "Unix 时间戳与可读日期时间双向转换",
+    descKey: "tools.timestamp.desc",
     component: () => import("./timestamp/TimestampToolView.vue"),
   },
   {
     id: "text-diff",
-    name: "文本对比",
+    nameKey: "tools.diff.name",
     category: "对比",
     path: "/tools/text-diff",
     icon: textIcon,
-    description: "行级 Diff 对比，修改行词级高亮",
+    descKey: "tools.diff.desc",
     component: () => import("./diff/DiffToolView.vue"),
   },
 ];

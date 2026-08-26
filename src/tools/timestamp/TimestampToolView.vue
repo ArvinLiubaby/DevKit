@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { NAlert, NButton, NDatePicker, NInput, NSpace, NText, useMessage } from "naive-ui";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -17,8 +18,13 @@ import {
 } from "./core";
 import { useThemeStore } from "../../stores/theme";
 import { useTimestampToolStore } from "../../stores/timestampTool";
+import { coreLang, i18n } from "../../i18n";
 
 const message = useMessage();
+const { t } = useI18n();
+
+// core 层通用语言标记（formatElapsed / unitLabel 参数），随全局语言切换
+const coreLangNow = computed(() => coreLang(i18n.global.locale.value));
 
 // 工作区状态提升到全局 store：切页返回后输入原样恢复
 const store = useTimestampToolStore();
@@ -52,8 +58,8 @@ const tsUnit = computed(() => detectUnit(tsInput.value));
 const tsDate = computed(() => parseTimestamp(tsInput.value));
 const tsError = computed(() => {
   if (!tsInput.value.trim()) return "";
-  if (!tsUnit.value) return "请输入纯数字时间戳（1~17 位数字）";
-  if (!tsDate.value) return "时间戳超出可表示范围";
+  if (!tsUnit.value) return t("ts.tsInvalid");
+  if (!tsDate.value) return t("ts.tsOutOfRange");
   return "";
 });
 
@@ -63,7 +69,7 @@ const tsError = computed(() => {
 const dateResult = computed(() => parseDateString(dateInput.value));
 const dateError = computed(() => {
   if (!dateInput.value.trim()) return "";
-  return dateResult.value ? "" : "无法识别的日期格式，示例：2026-08-26 15:30:00";
+  return dateResult.value ? "" : t("ts.dateInvalid");
 });
 
 // 日期选择器 → 文本输入（保持单一数据源，手动改文本不回写选择器）
@@ -82,61 +88,66 @@ async function copy(text: string, tip: string) {
   <div class="ts-tool" :class="{ dark: isDark }">
     <!-- 当前时间戳 -->
     <n-space class="toolbar" align="center" :wrap="true">
-      <n-text strong>当前时间戳</n-text>
+      <n-text strong>{{ t("ts.current") }}</n-text>
       <n-text code>{{ nowSec }}</n-text>
-      <n-text depth="3" size="small">秒</n-text>
+      <n-text depth="3" size="small">{{ t("ts.seconds") }}</n-text>
       <n-text code>{{ nowMs }}</n-text>
-      <n-text depth="3" size="small">毫秒</n-text>
+      <n-text depth="3" size="small">{{ t("ts.ms") }}</n-text>
       <n-text depth="3">{{ nowLocal }}</n-text>
-      <n-button size="tiny" secondary @click="copy(String(nowSec), '当前秒级时间戳已复制')">复制秒</n-button>
-      <n-button size="tiny" secondary @click="copy(String(nowMs), '当前毫秒级时间戳已复制')">复制毫秒</n-button>
+      <n-button size="tiny" secondary @click="copy(String(nowSec), t('ts.copySecDone'))">{{ t("ts.copySec") }}</n-button>
+      <n-button size="tiny" secondary @click="copy(String(nowMs), t('ts.copyMsDone'))">{{ t("ts.copyMs") }}</n-button>
     </n-space>
 
     <div class="panels">
       <!-- 时间戳 → 日期时间 -->
       <div class="panel">
-        <n-text strong size="small">时间戳 → 日期时间</n-text>
+        <n-text strong size="small">{{ t("ts.tsToDate") }}</n-text>
         <n-input
           v-model:value="tsInput"
-          placeholder="输入 Unix 时间戳，如 1785111000（秒 / 毫秒 / 微秒自动识别）"
+          :placeholder="t('ts.tsPlaceholder')"
           :status="tsError ? 'error' : undefined"
         />
         <n-alert v-if="tsError" type="error" size="small" :show-icon="true">{{ tsError }}</n-alert>
         <div v-if="tsDate" class="result-list">
           <div class="result-row">
-            <n-text depth="3" size="small">识别精度</n-text>
-            <n-text size="small">{{ unitLabel(tsUnit!) }}级 · 时区 {{ formatTimezoneOffset(tsDate) }}</n-text>
+            <n-text depth="3" size="small">{{ t("ts.precision") }}</n-text>
+            <n-text size="small">{{
+              t("ts.precisionDetail", {
+                unit: unitLabel(tsUnit!, coreLangNow),
+                offset: formatTimezoneOffset(tsDate),
+              })
+            }}</n-text>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">本地时间</n-text>
+            <n-text depth="3" size="small">{{ t("ts.local") }}</n-text>
             <n-text code class="result-value">{{ formatLocal(tsDate) }}</n-text>
-            <n-button size="tiny" secondary @click="copy(formatLocal(tsDate), '本地时间已复制')">复制</n-button>
+            <n-button size="tiny" secondary @click="copy(formatLocal(tsDate), t('ts.localCopied'))">{{ t("ts.copy") }}</n-button>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">UTC 时间</n-text>
+            <n-text depth="3" size="small">{{ t("ts.utc") }}</n-text>
             <n-text code class="result-value">{{ formatUtc(tsDate) }}</n-text>
-            <n-button size="tiny" secondary @click="copy(formatUtc(tsDate), 'UTC 时间已复制')">复制</n-button>
+            <n-button size="tiny" secondary @click="copy(formatUtc(tsDate), t('ts.utcCopied'))">{{ t("ts.copy") }}</n-button>
           </div>
           <div class="result-row">
             <n-text depth="3" size="small">ISO 8601</n-text>
             <n-text code class="result-value">{{ formatIso(tsDate) }}</n-text>
-            <n-button size="tiny" secondary @click="copy(formatIso(tsDate), 'ISO 8601 已复制')">复制</n-button>
+            <n-button size="tiny" secondary @click="copy(formatIso(tsDate), t('ts.isoCopied'))">{{ t("ts.copy") }}</n-button>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">本地 ISO</n-text>
+            <n-text depth="3" size="small">{{ t("ts.localIso") }}</n-text>
             <n-text code class="result-value">{{ formatIsoLocal(tsDate) }}</n-text>
-            <n-button size="tiny" secondary @click="copy(formatIsoLocal(tsDate), '本地 ISO 已复制')">复制</n-button>
+            <n-button size="tiny" secondary @click="copy(formatIsoLocal(tsDate), t('ts.localIsoCopied'))">{{ t("ts.copy") }}</n-button>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">距今</n-text>
-            <n-text size="small">{{ formatElapsed(tsDate) }}</n-text>
+            <n-text depth="3" size="small">{{ t("ts.elapsed") }}</n-text>
+            <n-text size="small">{{ formatElapsed(tsDate, new Date(), coreLangNow) }}</n-text>
           </div>
         </div>
       </div>
 
       <!-- 日期时间 → 时间戳 -->
       <div class="panel">
-        <n-text strong size="small">日期时间 → 时间戳</n-text>
+        <n-text strong size="small">{{ t("ts.dateToTs") }}</n-text>
         <n-date-picker
           v-model:value="datePickerValue"
           type="datetime"
@@ -145,31 +156,31 @@ async function copy(text: string, tip: string) {
         />
         <n-input
           v-model:value="dateInput"
-          placeholder="输入日期时间：2026-08-26 15:30:00 / 2026/08/26 / 2026-08-26T15:30:00+08:00"
+          :placeholder="t('ts.datePlaceholder')"
           :status="dateError ? 'error' : undefined"
         />
         <n-alert v-if="dateError" type="error" size="small" :show-icon="true">{{ dateError }}</n-alert>
         <div v-if="dateResult" class="result-list">
           <div class="result-row">
-            <n-text depth="3" size="small">本地时间</n-text>
+            <n-text depth="3" size="small">{{ t("ts.local") }}</n-text>
             <n-text code class="result-value">{{ formatLocal(dateResult) }}</n-text>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">秒级时间戳</n-text>
+            <n-text depth="3" size="small">{{ t("ts.secTs") }}</n-text>
             <n-text code class="result-value">{{ Math.floor(dateResult.getTime() / 1000) }}</n-text>
             <n-button
               size="tiny"
               secondary
-              @click="copy(String(Math.floor(dateResult.getTime() / 1000)), '秒级时间戳已复制')"
+              @click="copy(String(Math.floor(dateResult.getTime() / 1000)), t('ts.secTsCopied'))"
             >
-              复制
+              {{ t("ts.copy") }}
             </n-button>
           </div>
           <div class="result-row">
-            <n-text depth="3" size="small">毫秒级时间戳</n-text>
+            <n-text depth="3" size="small">{{ t("ts.msTs") }}</n-text>
             <n-text code class="result-value">{{ dateResult.getTime() }}</n-text>
-            <n-button size="tiny" secondary @click="copy(String(dateResult.getTime()), '毫秒级时间戳已复制')">
-              复制
+            <n-button size="tiny" secondary @click="copy(String(dateResult.getTime()), t('ts.msTsCopied'))">
+              {{ t("ts.copy") }}
             </n-button>
           </div>
         </div>

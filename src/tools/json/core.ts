@@ -69,6 +69,17 @@ export function minifyJson(
 }
 
 /**
+ * 宽松修复失败错误：JSON5 宽容语法修复项未开启时，预处理结果仍无法通过严格解析。
+ * message 为底层 JSON.parse 的原始错误（英文，含行列位置），由视图层包装翻译。
+ */
+export class LooseSyntaxError extends SyntaxError {
+  constructor(message: string) {
+    super(message);
+    this.name = "LooseSyntaxError";
+  }
+}
+
+/**
  * 解析 JSON（可自动修复非标准写法）。
  *
  * @param autoFix 为 true 时：先尝试标准解析，失败则走"预处理 + JSON5"宽容修复链路；
@@ -97,9 +108,8 @@ export function parseJson(
     report.looseFeatures = false;
   } catch (err) {
     if (!options.looseSyntax) {
-      throw new SyntaxError(
-        `内容包含未开启"JSON5 宽容语法"修复项无法处理的写法（${(err as Error).message}）`,
-      );
+      // 抛 LooseSyntaxError，视图层据此包装为当前语言的提示文案
+      throw new LooseSyntaxError((err as Error).message);
     }
     // JSON5 宽容解析：单引号/注释/尾随逗号/裸键/十六进制/多行字符串
     value = JSON5.parse(text);
@@ -140,7 +150,8 @@ export function describeParseError(err: unknown): string {
   if (err instanceof SyntaxError) {
     const withPos = err as SyntaxError & { lineNumber?: number; columnNumber?: number };
     if (withPos.lineNumber !== undefined && withPos.columnNumber !== undefined) {
-      return `${withPos.message}（第 ${withPos.lineNumber} 行，第 ${withPos.columnNumber} 列）`;
+      // 位置后缀用英文通用格式（引擎错误消息本身是英文）
+      return `${withPos.message} (line ${withPos.lineNumber}, column ${withPos.columnNumber})`;
     }
     return err.message;
   }

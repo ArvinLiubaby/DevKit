@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { NCard, NEmpty } from "naive-ui";
+
+const { t } = useI18n();
 </script>
 
 <template>
-  <n-card title="工具占位页" size="large">
-    <n-empty description="工具模块开发中，敬请期待" />
+  <n-card :title="t('app.aboutTitle')" size="large">
+    <n-empty :description="t('app.aboutDesc')" />
   </n-card>
 </template>

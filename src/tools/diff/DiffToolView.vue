@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { NButton, NEmpty, NInput, NSpace, NText } from "naive-ui";
 import { diffText, escapeHtml, type DiffResult, type Range } from "./core";
 import { useThemeStore } from "../../stores/theme";
 import { useDiffToolStore } from "../../stores/diffTool";
+
+const { t } = useI18n();
 
 // 工作区状态提升到全局 store：切页返回后输入原样恢复
 const store = useDiffToolStore();
@@ -97,32 +100,32 @@ function renderLine(text: string, highlights: Range[] | null): string {
 <template>
   <div class="diff-tool" :class="{ dark: isDark }">
     <n-space class="toolbar" align="center" :wrap="true">
-      <n-button size="small" @click="swap">交换左右</n-button>
-      <n-button size="small" @click="loadSample">载入示例</n-button>
-      <n-button size="small" @click="clearAll">清空</n-button>
+      <n-button size="small" @click="swap">{{ t("diff.swap") }}</n-button>
+      <n-button size="small" @click="loadSample">{{ t("diff.loadSample") }}</n-button>
+      <n-button size="small" @click="clearAll">{{ t("diff.clear") }}</n-button>
       <n-text v-if="stats" depth="3" size="small">
-        新增 {{ stats.add }} 行 · 删除 {{ stats.del }} 行 · 修改 {{ stats.change }} 行
+        {{ t("diff.stats", { add: stats.add, del: stats.del, change: stats.change }) }}
       </n-text>
     </n-space>
 
     <div class="inputs">
       <div class="input-col">
-        <n-text depth="3" size="small">原始文本</n-text>
+        <n-text depth="3" size="small">{{ t("diff.leftLabel") }}</n-text>
         <n-input
           v-model:value="leftText"
           type="textarea"
           class="mono"
-          placeholder="粘贴原始文本…"
+          :placeholder="t('diff.leftPlaceholder')"
           :autosize="{ minRows: 8, maxRows: 16 }"
         />
       </div>
       <div class="input-col">
-        <n-text depth="3" size="small">修改后文本</n-text>
+        <n-text depth="3" size="small">{{ t("diff.rightLabel") }}</n-text>
         <n-input
           v-model:value="rightText"
           type="textarea"
           class="mono"
-          placeholder="粘贴修改后的文本…"
+          :placeholder="t('diff.rightPlaceholder')"
           :autosize="{ minRows: 8, maxRows: 16 }"
         />
       </div>
@@ -163,14 +166,14 @@ function renderLine(text: string, highlights: Range[] | null): string {
         </svg>
       </div>
       <div class="identical-text">
-        <n-text strong class="identical-title">两侧文本完全一致，无差异</n-text>
-        <n-text depth="3" size="small">共 {{ stats?.total ?? 0 }} 行完全匹配</n-text>
+        <n-text strong class="identical-title">{{ t("diff.identicalTitle") }}</n-text>
+        <n-text depth="3" size="small">{{ t("diff.identicalSub", { total: stats?.total ?? 0 }) }}</n-text>
       </div>
     </div>
     <n-empty
       v-else-if="diffResult"
       size="small"
-      description="在两侧输入文本后自动对比（300ms 防抖）"
+      :description="t('diff.emptyHint')"
     />
   </div>
 </template>

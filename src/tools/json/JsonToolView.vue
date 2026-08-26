@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import {
   NAlert,
@@ -18,6 +19,7 @@ import {
   buildFoldRanges,
   describeParseError,
   formatJson,
+  LooseSyntaxError,
   minifyJson,
   sortJsonKeys,
   type FixReport,
@@ -27,6 +29,15 @@ import { useThemeStore } from "../../stores/theme";
 import { useJsonToolStore } from "../../stores/jsonTool";
 
 const message = useMessage();
+const { t } = useI18n();
+
+/** 解析错误 → 当前语言提示：LooseSyntaxError 包装翻译，其余附加行列位置 */
+function describeError(err: unknown): string {
+  if (err instanceof LooseSyntaxError) {
+    return t("json.looseError", { msg: err.message });
+  }
+  return describeParseError(err);
+}
 
 // 工作区状态提升到全局 store：切页返回后输入 / 输出 / 设置 / 折叠状态原样恢复
 const store = useJsonToolStore();
@@ -61,11 +72,11 @@ function onEditOutput() {
   }, 400);
 }
 
-const indentOptions = [
-  { label: "2 空格", value: 2 },
-  { label: "4 空格", value: 4 },
-  { label: "Tab", value: "\t" },
-];
+const indentOptions = computed(() => [
+  { label: t("json.indent2"), value: 2 },
+  { label: t("json.indent4"), value: 4 },
+  { label: t("json.indentTab"), value: "\t" },
+]);
 // 示例刻意使用多种非标准写法，用于演示自动修复能力
 const sampleJson = `{
   // 工具信息（行注释）
@@ -82,25 +93,25 @@ const sampleJson = `{
   /* 块注释：以上均为可自动修复的非标准写法 */
 }`;
 
-// 修复报告 → 人类可读描述列表
+// 修复报告 → 人类可读描述列表（多语言）
 const reportLines = computed(() => {
   const r = lastReport.value;
   if (!r) return [];
   const lines: string[] = [];
   if (r.looseFeatures) {
-    lines.push("JSON5 宽容语法：单引号 / 注释 / 尾随逗号 / 裸键 / 十六进制 / 多行字符串");
+    lines.push(t("json.fixLoose"));
   }
   if (r.nonJsonValues > 0) {
-    lines.push(`非 JSON 值 ${r.nonJsonValues} 处（undefined / NaN / Infinity）→ null`);
+    lines.push(t("json.fixNonJson", { count: r.nonJsonValues }));
   }
   if (r.octalLiterals > 0) {
-    lines.push(`八进制字面量 ${r.octalLiterals} 处（0o…）→ 十进制`);
+    lines.push(t("json.fixOctal", { count: r.octalLiterals }));
   }
   if (r.binaryLiterals > 0) {
-    lines.push(`二进制字面量 ${r.binaryLiterals} 处（0b…）→ 十进制`);
+    lines.push(t("json.fixBinary", { count: r.binaryLiterals }));
   }
   if (r.controlChars > 0) {
-    lines.push(`字符串内未转义控制字符 ${r.controlChars} 处（换行/Tab 等）→ 转义序列`);
+    lines.push(t("json.fixControl", { count: r.controlChars }));
   }
   return lines;
 });
@@ -179,7 +190,7 @@ watch(input, () => {
         error.value = "";
         lastReport.value = report;
       } catch (err) {
-        error.value = describeParseError(err);
+        error.value = describeError(err);
         lastReport.value = null;
       }
     } else {
@@ -209,7 +220,7 @@ watch(
 function run(action: "format" | "minify" | "sort", notify = true) {
   const raw = input.value.trim();
   if (!raw) {
-    message.warning("请先输入 JSON 内容");
+    message.warning(t("json.emptyInput"));
     return;
   }
   try {
@@ -233,35 +244,49 @@ function run(action: "format" | "minify" | "sort", notify = true) {
     lastReport.value = report;
     // 修复完成后给出明确提示
     if (notify && report) {
-      message.success(`已自动修复 ${reportLines.value.length} 类非标准写法，详见修复提示`);
+      message.success(t("json.fixSuccess", { count: reportLines.value.length }));
     }
   } catch (err) {
-    error.value = describeParseError(err);
+    error.value = describeError(err);
     lastReport.value = null;
-    if (notify) message.error("解析失败，详见错误提示");
+    if (notify) message.error(t("json.parseFailed"));
   }
 }
 
 async function copyOutput() {
   if (!output.value) {
-    message.warning("暂无可复制的内容");
+    message.warning(t("json.nothingToCopy"));
     return;
   }
   await writeText(output.value);
-  message.success("结果已复制到剪贴板");
+  message.success(t("json.copied"));
 }
 
 function loadSample() {
   input.value = sampleJson;
 }
 
+// 快捷键：Ctrl+Enter 格式化 / Ctrl+Shift+Enter 压缩（单监听避免 naive-ui onKeydown 数组警告）
+function onKeydown(e: KeyboardEvent) {
+  if (!e.ctrlKey || e.key !== "Enter") return;
+  e.preventDefault();
+  if (e.shiftKey) run("minify");
+  else run("format");
+}
+
 const clearAll = store.clearAll;
 
-const inputStats = computed(
-  () => `${input.value.length} 字符 · ${input.value ? input.value.split("\n").length : 0} 行`,
+const inputStats = computed(() =>
+  t("json.charLine", {
+    chars: input.value.length,
+    lines: input.value ? input.value.split("\n").length : 0,
+  }),
 );
-const outputStats = computed(
-  () => `${output.value.length} 字符 · ${output.value ? output.value.split("\n").length : 0} 行`,
+const outputStats = computed(() =>
+  t("json.charLine", {
+    chars: output.value.length,
+    lines: output.value ? output.value.split("\n").length : 0,
+  }),
 );
 </script>
 
@@ -271,31 +296,31 @@ const outputStats = computed(
     <div class="control-panel">
       <div class="control-row">
         <n-space align="center" :wrap="true" class="btn-group">
-          <n-button type="primary" size="small" @click="run('format')">格式化</n-button>
-          <n-button size="small" @click="run('minify')">压缩</n-button>
-          <n-button size="small" @click="run('sort')">键排序</n-button>
-          <n-button size="small" @click="loadSample">载入示例</n-button>
-          <n-button size="small" @click="clearAll">清空</n-button>
+          <n-button type="primary" size="small" @click="run('format')">{{ t("json.format") }}</n-button>
+          <n-button size="small" @click="run('minify')">{{ t("json.minify") }}</n-button>
+          <n-button size="small" @click="run('sort')">{{ t("json.sortKeys") }}</n-button>
+          <n-button size="small" @click="loadSample">{{ t("json.loadSample") }}</n-button>
+          <n-button size="small" @click="clearAll">{{ t("json.clear") }}</n-button>
         </n-space>
         <div class="row-divider" aria-hidden="true"></div>
         <n-space align="center" :wrap="true" class="row-opts">
           <n-select v-model:value="indent" :options="indentOptions" size="small" class="indent-select" />
           <n-switch v-model:value="autoFormat" size="small" />
-          <n-text depth="3" size="small">自动格式化</n-text>
+          <n-text depth="3" size="small">{{ t("json.autoFormat") }}</n-text>
         </n-space>
       </div>
 
       <!-- 修复开关行：总开关 + 三类修复项细分开关 -->
       <div class="control-row fix-row">
         <n-switch v-model:value="autoFix" size="small" />
-        <n-text depth="3" size="small">自动修复非标准写法</n-text>
+        <n-text depth="3" size="small">{{ t("json.autoFix") }}</n-text>
         <n-divider vertical />
         <n-switch v-model:value="fixOptions.looseSyntax" size="small" :disabled="!autoFix" />
-        <n-text depth="3" size="small">JSON5 宽容语法</n-text>
+        <n-text depth="3" size="small">{{ t("json.looseSyntax") }}</n-text>
         <n-switch v-model:value="fixOptions.nonJsonValues" size="small" :disabled="!autoFix" />
-        <n-text depth="3" size="small">undefined / NaN / Infinity</n-text>
+        <n-text depth="3" size="small">{{ t("json.nonJsonValues") }}</n-text>
         <n-switch v-model:value="fixOptions.radixLiterals" size="small" :disabled="!autoFix" />
-        <n-text depth="3" size="small">八 / 二进制字面量</n-text>
+        <n-text depth="3" size="small">{{ t("json.radixLiterals") }}</n-text>
       </div>
     </div>
 
@@ -314,9 +339,9 @@ const outputStats = computed(
         >
           <path fill="currentColor" d="M6 3.5l4.5 4.5L6 12.5l-1-1L8.5 8 5 4.5z" />
         </svg>
-        <span>已自动修复 {{ reportLines.length }} 类非标准写法</span>
+        <span>{{ t("json.fixReportTitle", { count: reportLines.length }) }}</span>
       </button>
-      <button class="fix-report-close" type="button" title="关闭提示" @click="lastReport = null">
+      <button class="fix-report-close" type="button" :title="t('json.closeTip')" @click="lastReport = null">
         ×
       </button>
       <ul v-show="!reportCollapsed" class="report-list">
@@ -327,25 +352,24 @@ const outputStats = computed(
     <div class="panels">
       <div class="input-panel panel">
         <div class="panel-head">
-          <span class="panel-title">原始输入</span>
+          <span class="panel-title">{{ t("json.inputTitle") }}</span>
         </div>
         <n-input
           v-model:value="input"
           type="textarea"
           class="panel-input"
-          placeholder="粘贴或输入 JSON 内容…（支持单引号 / 注释 / 尾随逗号 / 裸键等非标准写法；Ctrl+Enter 格式化，Ctrl+Shift+Enter 压缩）"
+          :placeholder="t('json.inputPlaceholder')"
           :status="error ? 'error' : undefined"
           :autosize="{ minRows: 16, maxRows: 32 }"
           :theme-overrides="{ borderRadius: '8px' }"
-          @keydown.ctrl.enter.prevent="run('format')"
-          @keydown.ctrl.shift.enter.prevent="run('minify')"
+          @keydown="onKeydown"
         />
       </div>
       <div class="output-panel panel">
         <div class="panel-head">
-          <span class="panel-title">格式化输出</span>
-          <n-text v-if="!editing" depth="3" size="small">点击行首箭头折叠 / 展开代码块</n-text>
-          <n-text v-else depth="3" size="small">修改将自动同步到原始输入</n-text>
+          <span class="panel-title">{{ t("json.outputTitle") }}</span>
+          <n-text v-if="!editing" depth="3" size="small">{{ t("json.foldHint") }}</n-text>
+          <n-text v-else depth="3" size="small">{{ t("json.editHint") }}</n-text>
           <div class="head-actions">
             <n-button
               v-if="editing"
@@ -361,7 +385,7 @@ const outputStats = computed(
                   />
                 </svg>
               </template>
-              完成
+              {{ t("json.done") }}
             </n-button>
             <n-button v-else size="tiny" secondary @click="enterEdit">
               <template #icon>
@@ -372,7 +396,7 @@ const outputStats = computed(
                   />
                 </svg>
               </template>
-              编辑
+              {{ t("json.edit") }}
             </n-button>
             <n-button size="tiny" secondary @click="copyOutput">
               <template #icon>
@@ -383,7 +407,7 @@ const outputStats = computed(
                   />
                 </svg>
               </template>
-              复制结果
+              {{ t("json.copy") }}
             </n-button>
           </div>
         </div>
@@ -403,7 +427,7 @@ const outputStats = computed(
                 type="button"
                 class="fold-btn"
                 :class="{ collapsed: line.collapsed }"
-                :title="line.collapsed ? '展开' : '折叠'"
+                :title="line.collapsed ? t('json.expand') : t('json.collapse')"
                 @click="toggleFold(line.index)"
               >
                 <svg class="fold-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -415,16 +439,16 @@ const outputStats = computed(
               <span v-if="line.collapsed" class="fold-ellipsis">…</span>
             </div>
           </template>
-          <n-empty v-else size="small" description="暂无结果，请先格式化" />
+          <n-empty v-else size="small" :description="t('json.outputEmpty')" />
         </div>
       </div>
     </div>
 
     <div class="stats">
-      <span class="stats-item">输入：{{ inputStats }}</span>
-      <span class="stats-item">输出：{{ outputStats }}</span>
+      <span class="stats-item">{{ t("json.inputStats", { stats: inputStats }) }}</span>
+      <span class="stats-item">{{ t("json.outputStats", { stats: outputStats }) }}</span>
       <span class="stats-spacer"></span>
-      <n-text depth="3" size="small">Ctrl+Enter 格式化 · Ctrl+Shift+Enter 压缩</n-text>
+      <n-text depth="3" size="small">{{ t("json.shortcutHint") }}</n-text>
     </div>
   </div>
 </template>

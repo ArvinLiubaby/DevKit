@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { NButton, NText, useMessage } from "naive-ui";
 import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { tools } from "../tools/registry";
@@ -8,17 +9,18 @@ import { useThemeStore } from "../stores/theme";
 const message = useMessage();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.theme === "dark");
+const { t } = useI18n();
 const clipboardContent = ref("");
 
 async function copyWelcome() {
   try {
     // 验证 clipboard-manager 插件链路（Rust 插件 + capabilities 权限 + JS API）
-    await writeText("DevKit - 本地优先的开发者效率工具集");
-    message.success("已复制到剪贴板");
+    await writeText("DevKit - local-first developer toolbox");
+    message.success(t("home.copied"));
     // 读回验证，用于排查剪贴板被外部占用/写入失败等问题
     clipboardContent.value = await readText();
   } catch (err) {
-    message.error(`剪贴板写入失败：${err}`);
+    message.error(t("home.copyFailed", { err: String(err) }));
   }
 }
 </script>
@@ -27,9 +29,9 @@ async function copyWelcome() {
   <div class="home" :class="{ dark: isDark }">
     <!-- 欢迎区 -->
     <section class="hero">
-      <h1 class="hero-title">欢迎使用 DevKit</h1>
+      <h1 class="hero-title">{{ t("home.welcome") }}</h1>
       <div class="hero-accent" aria-hidden="true"></div>
-      <p class="hero-sub">本地优先、离线可用、跨平台的开发者效率工具集</p>
+      <p class="hero-sub">{{ t("home.subtitle") }}</p>
       <n-button class="copy-btn" @click="copyWelcome">
         <template #icon>
           <svg viewBox="0 0 24 24" aria-hidden="true" class="copy-icon">
@@ -39,30 +41,30 @@ async function copyWelcome() {
             />
           </svg>
         </template>
-        复制欢迎语
+        {{ t("home.copyWelcome") }}
       </n-button>
       <p v-if="clipboardContent" class="clipboard-check">
-        <n-text depth="3" size="small">剪贴板读回验证：{{ clipboardContent }}</n-text>
+        <n-text depth="3" size="small">{{ t("home.clipboardCheck", { content: clipboardContent }) }}</n-text>
       </p>
     </section>
 
     <!-- 工具卡片 -->
     <section class="tools-section">
-      <h2 class="section-title">可用工具</h2>
+      <h2 class="section-title">{{ t("home.availableTools") }}</h2>
       <div class="tool-grid">
         <router-link
-          v-for="(t, i) in tools"
-          :key="t.id"
-          :to="t.path"
+          v-for="(tool, i) in tools"
+          :key="tool.id"
+          :to="tool.path"
           class="tool-card"
           :style="{ animationDelay: `${i * 70}ms` }"
         >
           <div class="tool-icon">
-            <img :src="t.icon" alt="" />
+            <img :src="tool.icon" alt="" />
           </div>
           <div class="tool-info">
-            <span class="tool-name">{{ t.name }}</span>
-            <span class="tool-desc">{{ t.description }}</span>
+            <span class="tool-name">{{ t(tool.nameKey) }}</span>
+            <span class="tool-desc">{{ t(tool.descKey) }}</span>
           </div>
           <span class="tool-arrow" aria-hidden="true">→</span>
         </router-link>
