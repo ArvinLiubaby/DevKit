@@ -209,6 +209,12 @@ export default {
     resetDone: "Restored to default",
     actions: {
       toggleWindow: "Show Main Window",
+      jsonFormatter: "JSON Formatter",
+      timestampConverter: "Timestamp Converter",
+      textDiff: "Text Diff",
+      imageConverter: "Image Converter",
+      ossRecommend: "Open Source Picks",
+      shortcutManager: "Shortcut Manager",
     },
   },
 };

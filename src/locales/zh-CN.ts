@@ -209,6 +209,12 @@ export default {
     resetDone: "已恢复默认",
     actions: {
       toggleWindow: "唤起主窗口",
+      jsonFormatter: "JSON 格式化",
+      timestampConverter: "时间戳转换",
+      textDiff: "文本对比",
+      imageConverter: "图片压缩转换",
+      ossRecommend: "优秀开源软件",
+      shortcutManager: "快捷键管理",
     },
   },
 };

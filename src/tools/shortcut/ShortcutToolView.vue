@@ -11,9 +11,15 @@ interface ShortcutInfo {
   defaultKey: string;
 }
 
-/** 浏览器预览模式的静态默认配置（无 Rust 命令可用） */
+/** 浏览器预览模式的静态默认配置（无 Rust 命令可用），与 Rust 侧 ACTIONS 保持一致 */
 const DEFAULT_ITEMS: ShortcutInfo[] = [
   { id: "toggleWindow", key: "Alt+Space", defaultKey: "Alt+Space" },
+  { id: "jsonFormatter", key: "Alt+J", defaultKey: "Alt+J" },
+  { id: "timestampConverter", key: "Alt+T", defaultKey: "Alt+T" },
+  { id: "textDiff", key: "Alt+D", defaultKey: "Alt+D" },
+  { id: "imageConverter", key: "Alt+I", defaultKey: "Alt+I" },
+  { id: "ossRecommend", key: "Alt+R", defaultKey: "Alt+R" },
+  { id: "shortcutManager", key: "Alt+K", defaultKey: "Alt+K" },
 ];
 
 const message = useMessage();

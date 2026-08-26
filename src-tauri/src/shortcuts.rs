@@ -8,7 +8,7 @@ use std::sync::Mutex;
 
 use global_hotkey::hotkey::{Code, HotKey as Shortcut, Modifiers};
 use serde::Serialize;
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 use tauri_plugin_store::StoreExt;
 
@@ -16,12 +16,48 @@ use tauri_plugin_store::StoreExt;
 pub struct ActionDef {
     pub id: &'static str,
     pub default_key: &'static str,
+    /// 前端路由路径；空串表示无页面（如唤起主窗口）
+    pub path: &'static str,
 }
 
-pub const ACTIONS: [ActionDef; 1] = [ActionDef {
-    id: "toggleWindow",
-    default_key: "alt+Space",
-}];
+/// 内置动作：每个工具一个全局快捷键，按下后唤起主窗口并跳转对应工具页
+pub const ACTIONS: [ActionDef; 7] = [
+    ActionDef {
+        id: "toggleWindow",
+        default_key: "alt+Space",
+        path: "",
+    },
+    ActionDef {
+        id: "jsonFormatter",
+        default_key: "alt+J",
+        path: "/tools/json-formatter",
+    },
+    ActionDef {
+        id: "timestampConverter",
+        default_key: "alt+T",
+        path: "/tools/timestamp-converter",
+    },
+    ActionDef {
+        id: "textDiff",
+        default_key: "alt+D",
+        path: "/tools/text-diff",
+    },
+    ActionDef {
+        id: "imageConverter",
+        default_key: "alt+I",
+        path: "/tools/image-converter",
+    },
+    ActionDef {
+        id: "ossRecommend",
+        default_key: "alt+R",
+        path: "/tools/oss-recommend",
+    },
+    ActionDef {
+        id: "shortcutManager",
+        default_key: "alt+K",
+        path: "/tools/shortcuts",
+    },
+];
 
 /// 快捷键管理器：action id -> 当前快捷键（与系统注册保持同步）
 pub struct ShortcutManager {
@@ -81,9 +117,12 @@ fn register_action(app: &AppHandle, action: &ActionDef, shortcut: Shortcut) -> R
 }
 
 fn handle_action(id: &str, app: &AppHandle) {
-    match id {
-        "toggleWindow" => show_main_window(app),
-        _ => {}
+    // 先唤起主窗口（可能隐藏 / 最小化），再导航到对应工具页
+    show_main_window(app);
+    if let Some(action) = ACTIONS.iter().find(|a| a.id == id) {
+        if !action.path.is_empty() {
+            let _ = app.emit("devkit://navigate", action.path);
+        }
     }
 }
 
