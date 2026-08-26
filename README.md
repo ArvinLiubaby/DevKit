@@ -61,7 +61,7 @@
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
 | Windows | [DevKit_0.3.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.2.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.2.0/DevKit_0.2.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2（v0.3.0 将随 WSL 构建同步发布） |
+| Linux | [DevKit_0.3.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 安装后可通过 **应用内自动更新** 获取新版本（新版本发布后自动检测更新）。
 
