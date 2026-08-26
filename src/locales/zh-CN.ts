@@ -38,6 +38,10 @@ export default {
       name: "优秀开源软件",
       desc: "精选社区验证的优秀开源软件，一键直达 GitHub",
     },
+    shortcut: {
+      name: "快捷键",
+      desc: "查看与管理全局快捷键",
+    },
   },
   json: {
     format: "格式化",
@@ -186,6 +190,25 @@ export default {
         tag: "文本编辑",
         desc: "轻量级代码编辑器，语法高亮 / 多标签 / 宏录制，Windows 平台经典必备",
       },
+    },
+  },
+  shortcut: {
+    intro: "管理 DevKit 的全局快捷键。应用后台运行或最小化时依然生效，按下即可唤起主窗口。",
+    current: "当前快捷键",
+    default: "默认",
+    modify: "修改",
+    recording: "按下新组合键…（Esc 取消）",
+    reset: "重置",
+    resetAll: "全部重置",
+    resetAllConfirm: "确定将所有快捷键恢复为默认值吗？",
+    notTauri: "全局快捷键管理需要在桌面应用中运行，当前浏览器预览模式仅展示默认配置。",
+    conflict: "该组合键已被其他动作占用，请更换",
+    invalid: "无效的快捷键：请至少包含一个修饰键（Ctrl / Alt / Shift / Win）",
+    updateFailed: "设置失败：{err}",
+    updated: "快捷键已更新",
+    resetDone: "已恢复默认",
+    actions: {
+      toggleWindow: "唤起主窗口",
     },
   },
 };

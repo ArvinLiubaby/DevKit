@@ -38,6 +38,10 @@ export default {
       name: "Open Source Picks",
       desc: "Hand-picked excellent open-source software, one click to GitHub",
     },
+    shortcut: {
+      name: "Shortcuts",
+      desc: "View and manage global shortcuts",
+    },
   },
   json: {
     format: "Format",
@@ -186,6 +190,25 @@ export default {
         tag: "Text Editor",
         desc: "Lightweight code editor with syntax highlighting / tabs / macro recording, a Windows classic",
       },
+    },
+  },
+  shortcut: {
+    intro: "Manage DevKit's global shortcuts. They keep working while the app runs in background or is minimized — press the combo to bring the main window to front.",
+    current: "Current",
+    default: "Default",
+    modify: "Modify",
+    recording: "Press new combo… (Esc to cancel)",
+    reset: "Reset",
+    resetAll: "Reset All",
+    resetAllConfirm: "Reset all shortcuts to defaults?",
+    notTauri: "Global shortcut management requires the desktop app. Browser preview only shows the default config.",
+    conflict: "This combo is already used by another action",
+    invalid: "Invalid combo: include at least one modifier (Ctrl / Alt / Shift / Win)",
+    updateFailed: "Update failed: {err}",
+    updated: "Shortcut updated",
+    resetDone: "Restored to default",
+    actions: {
+      toggleWindow: "Show Main Window",
     },
   },
 };

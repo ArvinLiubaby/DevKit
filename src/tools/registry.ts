@@ -4,6 +4,7 @@ import timeIcon from "../assets/icons/time.svg";
 import textIcon from "../assets/icons/text.svg";
 import imageIcon from "../assets/icons/image.svg";
 import githubIcon from "../assets/icons/github.svg";
+import keyboardIcon from "../assets/icons/keyboard.svg";
 
 /**
  * 工具模块元数据：注册表驱动路由与侧边栏菜单。
@@ -71,5 +72,14 @@ export const tools: ToolMeta[] = [
     icon: githubIcon,
     descKey: "tools.recommend.desc",
     component: () => import("./recommend/RecommendToolView.vue"),
+  },
+  {
+    id: "shortcuts",
+    nameKey: "tools.shortcut.name",
+    category: "设置",
+    path: "/tools/shortcuts",
+    icon: keyboardIcon,
+    descKey: "tools.shortcut.desc",
+    component: () => import("./shortcut/ShortcutToolView.vue"),
   },
 ];

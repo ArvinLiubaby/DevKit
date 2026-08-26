@@ -788,6 +788,7 @@ dependencies = [
 name = "devkit"
 version = "0.2.0"
 dependencies = [
+ "global-hotkey",
  "serde",
  "serde_json",
  "tauri",
