@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevKit</title>
+    <script>
+      // 启动时同步设置背景色，避免 WebView 加载期间白屏闪烁
+      // 主题值由 src/stores/theme.ts 镜像写入 localStorage（key: theme）
+      try {
+        var saved = localStorage.getItem("theme");
+        var bg = saved === "dark" ? "#101014" : "#f5f6f8";
+        document.documentElement.style.backgroundColor = bg;
+        document.body.style.backgroundColor = bg;
+      } catch (e) {}
+    </script>
     <style>
       html,
       body,

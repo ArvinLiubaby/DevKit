@@ -23,6 +23,8 @@ export const useThemeStore = defineStore("theme", () => {
         const store = await Store.load(SETTINGS_FILE);
         const saved = (await store.get<string>(THEME_KEY)) ?? "light";
         theme.value = saved === "dark" ? "dark" : "light";
+        // 镜像到 localStorage，供 index.html 启动内联脚本同步读取（消除白屏闪烁）
+        localStorage.setItem(THEME_KEY, theme.value);
         return;
       } catch (err) {
         console.warn("[theme] 读取设置失败，回退 localStorage", err);
@@ -41,6 +43,7 @@ export const useThemeStore = defineStore("theme", () => {
         const store = await Store.load(SETTINGS_FILE);
         await store.set(THEME_KEY, theme.value);
         await store.save();
+        localStorage.setItem(THEME_KEY, theme.value);
         return;
       } catch (err) {
         console.warn("[theme] 写入设置失败，回退 localStorage", err);
