@@ -53,6 +53,7 @@
 - **深色模式**：太阳/月亮一键切换，全界面明暗适配
 - **状态保留**：切换工具页面后输入内容与设置原样恢复
 - **全局快捷键**：每个工具预设快捷键（可自定义），后台也能一键直达
+- **关于面板**：左下角液态玻璃悬浮按钮，查看版本信息，一键直达 GitHub 仓库
 
 ## 📥 下载安装
 
@@ -60,8 +61,8 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows | [DevKit_0.3.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.3.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.4.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.4.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 安装后可通过 **应用内自动更新** 获取新版本（新版本发布后自动检测更新）。
 
@@ -75,6 +76,7 @@
 4. **图片压缩转换**：拖入图片 → 选择目标格式 / 质量 / 缩放 → 实时预览压缩效果 → 单张保存或全部导出
 5. **优秀开源软件**：浏览精选开源项目卡片 → 一键打开 GitHub 项目页或复制链接
 6. **快捷键**：查看全部全局快捷键 → 点击"修改"后直接按下新组合键，实时生效并持久化
+7. **关于**：点击左下角悬浮按钮，查看应用版本、简介与开源仓库
 
 > 提示：应用最小化或后台运行时，按下任意工具快捷键（如 `Alt+J`）即可唤起窗口并直达对应工具页。
 

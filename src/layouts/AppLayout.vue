@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h } from "vue";
+import { computed, h, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import {
@@ -9,20 +9,54 @@ import {
   NLayoutHeader,
   NLayoutSider,
   NMenu,
+  NModal,
   NText,
   NTooltip,
+  useMessage,
 } from "naive-ui";
 import type { DropdownOption, MenuOption } from "naive-ui";
+import { isTauri } from "@tauri-apps/api/core";
+import { getVersion } from "@tauri-apps/api/app";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { useThemeStore } from "../stores/theme";
 import { useLanguageStore } from "../stores/language";
 import { tools } from "../tools/registry";
+import aboutIcon from "../assets/icons/about.svg";
+// 程序图标（与任务栏/桌面一致）作为弹窗品牌 logo
+import appIcon from "../../src-tauri/icons/icon.png";
 
 const themeStore = useThemeStore();
 const route = useRoute();
 const router = useRouter();
+const message = useMessage();
 const isDark = computed(() => themeStore.theme === "dark");
 const { t } = useI18n();
 const langStore = useLanguageStore();
+
+// 关于弹窗：版本号从 Tauri 运行时读取，浏览器预览回退当前发布版本
+const showAbout = ref(false);
+const appVersion = ref("0.3.0");
+if (isTauri()) {
+  getVersion().then((v) => (appVersion.value = v));
+}
+
+/** 打开 GitHub 仓库：Tauri 用 opener 插件（系统默认浏览器），浏览器预览回退 <a> 跳转 */
+async function openRepo() {
+  const url = "https://github.com/ArvinLiubaby/DevKit";
+  try {
+    if (isTauri()) {
+      await openUrl(url);
+    } else {
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.click();
+    }
+  } catch (err) {
+    message.error(t("app.openFailed", { err: String(err) }));
+  }
+}
 
 // 语言菜单（仅中英双语）：当前语言带对勾标识，选项语言名保持原生显示
 const checkIcon = () =>
@@ -88,12 +122,30 @@ function handleMenuSelect(key: string) {
       :collapsed-width="0"
       show-trigger
     >
-      <n-menu
-        :options="menuOptions"
-        :value="activeKey"
-        :theme-overrides="menuThemeOverrides"
-        @update:value="handleMenuSelect"
-      />
+      <div class="sider-inner">
+        <n-menu
+          :options="menuOptions"
+          :value="activeKey"
+          :theme-overrides="menuThemeOverrides"
+          @update:value="handleMenuSelect"
+        />
+        <div class="sider-footer">
+          <!-- 关于入口：悬浮圆形按钮，阴影 + hover 上浮交互 -->
+          <n-tooltip placement="right">
+            <template #trigger>
+              <button
+                class="about-fab"
+                type="button"
+                :aria-label="t('app.about')"
+                @click="showAbout = true"
+              >
+                <img class="about-fab-icon" :src="aboutIcon" alt="" aria-hidden="true" />
+              </button>
+            </template>
+            {{ t("app.about") }}
+          </n-tooltip>
+        </div>
+      </div>
     </n-layout-sider>
     <n-layout>
       <n-layout-header bordered class="app-header" :class="{ dark: isDark }">
@@ -155,6 +207,41 @@ function handleMenuSelect(key: string) {
       </n-layout-content>
     </n-layout>
   </n-layout>
+
+  <!-- 关于弹窗：品牌 logo + 版本 + 简介 + GitHub 仓库入口，居中卡片 -->
+  <n-modal
+    v-model:show="showAbout"
+    :mask-closable="true"
+    :close-on-esc="true"
+    :show-close="false"
+    class="about-modal-root"
+  >
+    <div class="about-modal" :class="{ dark: isDark }">
+      <button
+        class="about-close"
+        type="button"
+        :aria-label="t('app.close')"
+        @click="showAbout = false"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+      </button>
+      <button class="about-logo-btn" type="button" :title="t('app.aboutRepo')" @click="openRepo">
+        <img class="about-logo" :src="appIcon" alt="DevKit" />
+      </button>
+      <div class="about-name">DevKit</div>
+      <div class="about-version">{{ t("app.aboutVersion") }} v{{ appVersion }}</div>
+      <div class="about-slogan">{{ t("app.aboutSlogan") }}</div>
+      <n-button type="primary" size="small" block class="about-repo" @click="openRepo">
+        {{ t("app.aboutRepo") }}
+      </n-button>
+      <div class="about-copy">© 2026 Creek · MIT License</div>
+    </div>
+  </n-modal>
 </template>
 
 <style scoped>
@@ -163,12 +250,189 @@ function handleMenuSelect(key: string) {
 }
 
 /* 导航栏与工作区拉开层次：浅色浅灰 / 深色深灰，避免与内容区融为一体 */
-.app-sider {
+app-sider {
   background: #f5f6f8;
 }
 
 .app-sider.dark {
   background: #1a1c21;
+}
+
+/* 侧边栏内部：菜单占满，底部固定"关于"入口 */
+.sider-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sider-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-start;
+  padding: 14px 0 16px 14px;
+}
+
+/* 悬浮圆形按钮：液态玻璃质感（半透明磨砂 + 顶部高光 + 边缘高光线），hover 上浮 + 阴影加深 */
+.about-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.about-fab:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.about-fab:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.app-sider.dark .about-fab {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.app-sider.dark .about-fab:hover {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.about-fab-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* 关于弹窗：居中卡片，四周和谐、跟随主题 */
+.about-modal-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 340px;
+  padding: 30px 28px 22px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+  color: #333;
+  text-align: center;
+}
+
+.about-modal.dark {
+  background: #23262c;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  color: #d7dbe0;
+}
+
+.about-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.about-close:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.14);
+}
+
+.about-modal.dark .about-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.about-close svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* logo：可点击跳转仓库，hover 轻微放大 */
+.about-logo-btn {
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.about-logo-btn:hover {
+  transform: scale(1.06);
+}
+
+.about-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+}
+
+.about-name {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.about-version {
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+.about-slogan {
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.about-repo {
+  margin-top: 4px;
+}
+
+.about-copy {
+  margin-top: 10px;
+  font-size: 11px;
+  opacity: 0.45;
 }
 
 .app-header {

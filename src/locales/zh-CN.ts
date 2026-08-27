@@ -7,6 +7,12 @@ export default {
     switchTheme: "切换主题",
     aboutTitle: "工具占位页",
     aboutDesc: "工具模块开发中，敬请期待",
+    about: "关于",
+    aboutVersion: "版本",
+    aboutRepo: "访问 GitHub 仓库",
+    aboutSlogan: "本地优先、离线可用、跨平台的开发者效率工具集",
+    openFailed: "打开链接失败：{err}",
+    close: "关闭",
   },
   home: {
     welcome: "欢迎使用 DevKit",

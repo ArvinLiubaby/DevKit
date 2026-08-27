@@ -60,8 +60,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows | [DevKit_0.3.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.3.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.3.0_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.4.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.4.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 After installation, new versions are delivered via **in-app auto-update**.
 
@@ -75,6 +75,7 @@ Launch the app and pick a tool from the sidebar:
 4. **Image Converter**: drop in images → pick target format / quality / scale → preview compression live → save individually or export all
 5. **Open Source Picks**: browse hand-picked project cards → open the GitHub page or copy the link in one click
 6. **Shortcuts**: view all global shortcuts → click "Modify" and press a new combo, applied and persisted instantly
+7. **About**: click the floating button at the bottom-left to view app version, intro and the open-source repo
 
 > Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly.
 

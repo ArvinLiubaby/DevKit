@@ -7,6 +7,12 @@ export default {
     switchTheme: "Toggle Theme",
     aboutTitle: "Tool Placeholder",
     aboutDesc: "Tool modules under development, stay tuned",
+    about: "About",
+    aboutVersion: "Version",
+    aboutRepo: "Visit GitHub Repo",
+    aboutSlogan: "A local-first, offline, cross-platform developer toolbox",
+    openFailed: "Failed to open link: {err}",
+    close: "Close",
   },
   home: {
     welcome: "Welcome to DevKit",
