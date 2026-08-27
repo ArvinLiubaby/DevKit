@@ -39,6 +39,7 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "DevKit ${{ github.ref_name }}"
+          createUpdaterArtifacts: true
           releaseBody: |
             自动构建发布：DevKit ${{ github.ref_name }}
             - macOS: dmg 安装包（未签名，首次打开请右键→打开）
