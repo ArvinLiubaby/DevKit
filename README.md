@@ -119,15 +119,15 @@ npm run tauri build  # 构建安装包（Windows: NSIS / Linux: deb）
 npm run lint         # 代码检查
 ```
 
-跨平台打包：Windows 用 [scripts/build-win.ps1](scripts/build-win.ps1)，Linux 用 [scripts/build-deb.sh](scripts/build-deb.sh)（WSL 内执行），macOS 由 CI 自动构建。
+跨平台打包：Windows 用 [scripts/build-win.ps1](scripts/build-win.ps1)，Linux 用 [scripts/build-deb.sh](scripts/build-deb.sh)（WSL 内执行），macOS 可在 [Actions](.github/workflows/release.yml) 手动触发构建（默认不打包）。
 
 ### 发布流程
 
-推送版本 tag（如 `v0.1.0`）自动触发 [GitHub Actions](.github/workflows/release.yml) 构建 **macOS** 安装包：
+默认只发布 Windows / Linux（本地构建），需要 macOS 包时手动触发 [GitHub Actions](.github/workflows/release.yml) 并填写 tag 名称：
 
-- macOS → dmg 安装包 + app.tar.gz 更新包（自动签名）+ `latest.json` 更新清单，自动创建 GitHub Release
 - Windows → 本地执行 `scripts/build-win.ps1`（NSIS 安装包 + 签名）
 - Linux → 本地执行 `scripts/build-deb.sh`（WSL，deb 安装包 + 签名）
+- macOS（可选）→ Actions 手动触发，dmg 安装包 + app.tar.gz 更新包（自动签名）+ `latest.json` 更新清单
 - 构建产物与签名上传到对应 Release 后，应用内自动更新即可检测到新版本
 
 > 发布前需在仓库 Secrets 配置 `TAURI_SIGNING_PRIVATE_KEY` 与 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`（自动更新签名密钥）。

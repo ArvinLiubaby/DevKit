@@ -118,15 +118,15 @@ npm run tauri build  # build installers (Windows: NSIS / Linux: deb)
 npm run lint         # lint check
 ```
 
-Cross-platform packaging: Windows via [scripts/build-win.ps1](scripts/build-win.ps1), Linux via [scripts/build-deb.sh](scripts/build-deb.sh) (inside WSL), macOS is built automatically by CI.
+Cross-platform packaging: Windows via [scripts/build-win.ps1](scripts/build-win.ps1), Linux via [scripts/build-deb.sh](scripts/build-deb.sh) (inside WSL); macOS can be triggered manually on [Actions](.github/workflows/release.yml) (not built by default).
 
 ### Release Process
 
-Pushing a version tag (e.g. `v0.1.0`) triggers [GitHub Actions](.github/workflows/release.yml) to build the **macOS** installer:
+By default only Windows / Linux are released (local builds); when a macOS package is needed, trigger [GitHub Actions](.github/workflows/release.yml) manually and enter the tag name:
 
-- macOS → dmg installer + app.tar.gz update package (signed) + `latest.json` update manifest, release created automatically
 - Windows → run `scripts/build-win.ps1` locally (NSIS installer + signature)
 - Linux → run `scripts/build-deb.sh` locally (WSL, deb installer + signature)
+- macOS (optional) → manual Actions run, dmg installer + app.tar.gz update package (signed) + `latest.json` update manifest
 - Once artifacts and signatures are uploaded to the release, in-app auto-update picks up the new version
 
 > Before releasing, configure `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in the repository Secrets (auto-update signing keys).

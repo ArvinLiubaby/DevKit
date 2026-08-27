@@ -1,13 +1,15 @@
-# 发布流水线：推送版本 tag（如 v0.1.0）触发 macOS 构建
-# 仅构建 macOS dmg（Windows NSIS / Linux deb 走本地构建：scripts/build-win.ps1、build-deb.sh）
-# 产物由 tauri-action 上传到 GitHub Releases
+# 发布流水线：macOS 安装包（手动触发，默认不打包）
+# Windows NSIS / Linux deb 走本地构建：scripts/build-win.ps1、build-deb.sh
+# 需要 macOS 包时手动运行本 workflow 并填写 tag 名称
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Git tag 名称（如 v0.5.3）"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -37,11 +39,11 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "DevKit ${{ github.ref_name }}"
+          tagName: ${{ inputs.tag }}
+          releaseName: "DevKit ${{ inputs.tag }}"
           createUpdaterArtifacts: v2Compatible
           releaseBody: |
-            自动构建发布：DevKit ${{ github.ref_name }}
+            手动构建发布：DevKit ${{ inputs.tag }}
             - macOS: dmg 安装包（未签名，首次打开请右键→打开）
             - Windows: NSIS 安装包（本地构建 scripts/build-win.ps1）
             - Linux: deb 安装包（本地构建 scripts/build-deb.sh）
