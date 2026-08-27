@@ -77,8 +77,8 @@
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
 | macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_aarch64.dmg) | Apple Silicon（M 系列），未签名，首次打开请右键 → 打开 |
-| Windows | [DevKit_0.5.2_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.5.2_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.3_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.5.3_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux 安装包由本地构建脚本生成（见[发布流程](#发布流程)），最新版本请以 [Releases 页](https://github.com/ArvinLiubaby/DevKit/releases)为准。
 

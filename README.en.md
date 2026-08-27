@@ -76,8 +76,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 | Platform | Installer | Notes |
 | --- | --- | --- |
 | macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_aarch64.dmg) | Apple Silicon (M series), unsigned - right-click → Open on first launch |
-| Windows | [DevKit_0.5.2_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.5.2_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.3_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.5.3_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux installers are built by local scripts (see [Release Process](#release-process)); always check the [Releases page](https://github.com/ArvinLiubaby/DevKit/releases) for the latest. 
 
