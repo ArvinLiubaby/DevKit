@@ -2,9 +2,9 @@
 
 [English](README.en.md) | **中文**
 
-![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey) ![License](https://img.shields.io/badge/license-MIT-green) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
+![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-MIT-green) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
 
-**本地优先、离线可用、跨平台的开发者效率工具集。** 基于 Tauri 2 + Vue 3 构建，安装包仅约 3 MB，开箱即用，支持中英双语与深色模式。
+**本地优先、离线可用、跨平台的开发者效率工具集。** 基于 Tauri 2 + Vue 3 构建，安装包仅约 3-5 MB，开箱即用，支持中英双语与深色模式。
 
 ## ✨ 功能特性
 
@@ -13,8 +13,8 @@
 - **开始菜单式搜索**：首页搜索框直接搜索并启动本机程序，支持中文/英文/拼音/首字母/模糊匹配（输入 `vsc` 即可命中 VS Code，`wx` 或 `weix` 可搜到微信）
 - **真实图标**：搜索结果展示应用真实图标（含 Microsoft Store 应用），加载失败自动回退首字母头像
 - **激活已有实例**：已运行的应用直接激活已有窗口（微信、Edge 等不再新开实例），未运行则正常启动
-- **覆盖面广**：开始菜单、桌面快捷方式、Microsoft Store（UWP）应用全部收录，卸载项自动过滤
-- **一键唤起**：全局快捷键 `Alt+Space` 唤起主窗口并自动聚焦搜索框
+- **覆盖面广**：开始菜单、桌面快捷方式、Microsoft Store（UWP）应用全部收录，卸载项自动过滤；macOS 自动扫描 `/Applications` 与 `~/Applications` 的 .app 应用
+- **一键唤起**：全局快捷键 `Alt+Space`（macOS 同样适用）唤起主窗口并自动聚焦搜索框
 
 ### 进制转换工具
 
@@ -57,7 +57,7 @@
 
 ### 快捷键管理
 
-- **全局快捷键**：应用后台或最小化时依然生效，每个工具预设一个快捷键，按下即唤起窗口并直达工具页（`Alt+J` JSON / `Alt+T` 时间戳 / `Alt+D` 对比 / `Alt+I` 图片 / `Alt+R` 推荐 / `Alt+K` 快捷键管理 / `Alt+Space` 唤起主窗口并聚焦搜索框）
+- **全局快捷键**：应用后台或最小化时依然生效，每个工具预设一个快捷键，按下即唤起窗口并直达工具页（`Alt+J` JSON / `Alt+T` 时间戳 / `Alt+D` 对比 / `Alt+I` 图片 / `Alt+R` 推荐 / `Alt+K` 快捷键管理 / `Alt+Space` 唤起主窗口并聚焦搜索框；macOS 自动映射为 `Cmd+J/T/D/I/R/K`）
 - **可视化修改**：录制式修改组合键，实时生效并持久化；冲突检测、单条重置与全部重置
 
 ### 通用能力
@@ -66,7 +66,7 @@
 - **深色模式**：太阳/月亮一键切换，全界面明暗适配
 - **状态保留**：切换工具页面后输入内容与设置原样恢复
 - **全局快捷键**：每个工具预设快捷键（可自定义），后台也能一键直达
-- **系统托盘**：点击关闭按钮最小化到系统托盘（程序后台继续运行），托盘左键单击恢复窗口、右键菜单可显示或退出
+- **系统托盘**：点击关闭按钮最小化到系统托盘（程序后台继续运行），托盘左键单击恢复窗口、右键菜单可显示或退出；macOS 使用 Template 图标自动适配深浅色菜单栏
 - **单实例**：重复启动自动激活已有窗口，资源不重复占用
 - **关于面板**：左下角液态玻璃悬浮按钮，查看版本信息，一键直达 GitHub 仓库
 
@@ -76,8 +76,11 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows | [DevKit_0.5.2_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.2_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.5.2_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.2_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.3_aarch64.dmg) | Apple Silicon（M 系列），未签名，首次打开请右键 → 打开 |
+| Windows | [DevKit_0.5.2_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.5.2_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.2/DevKit_0.5.2_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+
+> Windows / Linux 安装包由本地构建脚本生成（见[发布流程](#发布流程)），最新版本请以 [Releases 页](https://github.com/ArvinLiubaby/DevKit/releases)为准。
 
 安装后可通过 **应用内自动更新** 获取新版本（新版本发布后自动检测更新）。
 
@@ -105,6 +108,7 @@
 - [Rust](https://www.rust-lang.org/) stable
 - **Windows**：[Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)（含 WebView2）
 - **Linux**：`libwebkit2gtk-4.1-dev`、`libgtk-3-dev`、`librsvg2-dev`、`patchelf`
+- **macOS**：Xcode Command Line Tools（`xcode-select --install`）
 
 ### 常用命令
 
@@ -115,13 +119,16 @@ npm run tauri build  # 构建安装包（Windows: NSIS / Linux: deb）
 npm run lint         # 代码检查
 ```
 
+跨平台打包：Windows 用 [scripts/build-win.ps1](scripts/build-win.ps1)，Linux 用 [scripts/build-deb.sh](scripts/build-deb.sh)（WSL 内执行），macOS 由 CI 自动构建。
+
 ### 发布流程
 
-推送版本 tag（如 `v0.1.0`）自动触发 [GitHub Actions](.github/workflows/release.yml) 矩阵构建：
+推送版本 tag（如 `v0.1.0`）自动触发 [GitHub Actions](.github/workflows/release.yml) 构建 **macOS** 安装包：
 
-- Windows → NSIS 安装包（含签名）
-- Linux → deb 安装包
-- 自动生成 `latest.json` 更新清单并创建 GitHub Release
+- macOS → dmg 安装包 + app.tar.gz 更新包（自动签名）+ `latest.json` 更新清单，自动创建 GitHub Release
+- Windows → 本地执行 `scripts/build-win.ps1`（NSIS 安装包 + 签名）
+- Linux → 本地执行 `scripts/build-deb.sh`（WSL，deb 安装包 + 签名）
+- 构建产物与签名上传到对应 Release 后，应用内自动更新即可检测到新版本
 
 > 发布前需在仓库 Secrets 配置 `TAURI_SIGNING_PRIVATE_KEY` 与 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`（自动更新签名密钥）。
 
