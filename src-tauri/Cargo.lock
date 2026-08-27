@@ -786,7 +786,7 @@ dependencies = [
 
 [[package]]
 name = "devkit"
-version = "0.4.0"
+version = "0.5.1"
 dependencies = [
  "global-hotkey",
  "serde",
@@ -801,6 +801,7 @@ dependencies = [
  "tauri-plugin-single-instance",
  "tauri-plugin-store",
  "tauri-plugin-updater",
+ "windows",
 ]
 
 [[package]]

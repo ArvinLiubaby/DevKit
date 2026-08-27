@@ -23,6 +23,13 @@ export default {
     copyFailed: "剪贴板写入失败：{err}",
     availableTools: "可用工具",
   },
+  search: {
+    placeholder: "搜索并启动程序…（Alt+Space 快速唤起）",
+    notTauri: "程序搜索仅在桌面应用可用",
+    empty: "未找到匹配的程序",
+    launched: "已启动 {name}",
+    launchFailed: "启动失败：{err}",
+  },
   tools: {
     json: {
       name: "JSON 格式化",
@@ -44,10 +51,26 @@ export default {
       name: "优秀开源软件",
       desc: "精选社区验证的优秀开源软件，一键直达 GitHub",
     },
+    binary: {
+      name: "进制转换",
+      desc: "二进制 / 八进制 / 十进制 / 十六进制互转，支持任意长度大整数",
+    },
     shortcut: {
       name: "快捷键",
       desc: "查看与管理全局快捷键",
     },
+  },
+  bin: {
+    sourceRadix: "源进制",
+    placeholder: "输入数字，支持任意长度大整数",
+    invalid: "输入包含当前进制不允许的字符",
+    tip: "支持任意长度大整数；输入 0b / 0o / 0x 前缀可自动切换进制",
+    copy: "复制",
+    copied: "已复制{radix}结果",
+    radix2: "二进制",
+    radix8: "八进制",
+    radix10: "十进制",
+    radix16: "十六进制",
   },
   json: {
     format: "格式化",
@@ -214,7 +237,7 @@ export default {
     updated: "快捷键已更新",
     resetDone: "已恢复默认",
     actions: {
-      toggleWindow: "唤起主窗口",
+      toggleWindow: "唤起主窗口并聚焦搜索",
       jsonFormatter: "JSON 格式化",
       timestampConverter: "时间戳转换",
       textDiff: "文本对比",

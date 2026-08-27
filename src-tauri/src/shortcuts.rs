@@ -119,7 +119,10 @@ fn register_action(app: &AppHandle, action: &ActionDef, shortcut: Shortcut) -> R
 fn handle_action(id: &str, app: &AppHandle) {
     // 先唤起主窗口（可能隐藏 / 最小化），再导航到对应工具页
     show_main_window(app);
-    if let Some(action) = ACTIONS.iter().find(|a| a.id == id) {
+    if id == "toggleWindow" {
+        // 主窗口唤起：回到首页并聚焦搜索框
+        let _ = app.emit("devkit://focus-search", ());
+    } else if let Some(action) = ACTIONS.iter().find(|a| a.id == id) {
         if !action.path.is_empty() {
             let _ = app.emit("devkit://navigate", action.path);
         }

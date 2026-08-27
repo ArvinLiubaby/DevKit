@@ -23,6 +23,13 @@ export default {
     copyFailed: "Clipboard write failed: {err}",
     availableTools: "Available Tools",
   },
+  search: {
+    placeholder: "Search and launch apps… (Alt+Space to summon)",
+    notTauri: "App search is only available in the desktop app",
+    empty: "No matching apps found",
+    launched: "Launched {name}",
+    launchFailed: "Launch failed: {err}",
+  },
   tools: {
     json: {
       name: "JSON Formatter",
@@ -44,10 +51,26 @@ export default {
       name: "Open Source Picks",
       desc: "Hand-picked excellent open-source software, one click to GitHub",
     },
+    binary: {
+      name: "Radix Converter",
+      desc: "Convert between binary / octal / decimal / hex, arbitrary-precision integers",
+    },
     shortcut: {
       name: "Shortcuts",
       desc: "View and manage global shortcuts",
     },
+  },
+  bin: {
+    sourceRadix: "Source radix",
+    placeholder: "Type a number, arbitrary-precision integers supported",
+    invalid: "Input contains characters not allowed in this radix",
+    tip: "Arbitrary-precision integers supported; prefixes 0b / 0o / 0x auto-switch radix",
+    copy: "Copy",
+    copied: "{radix} result copied",
+    radix2: "Binary",
+    radix8: "Octal",
+    radix10: "Decimal",
+    radix16: "Hex",
   },
   json: {
     format: "Format",
@@ -214,7 +237,7 @@ export default {
     updated: "Shortcut updated",
     resetDone: "Restored to default",
     actions: {
-      toggleWindow: "Show Main Window",
+      toggleWindow: "Show Main Window & Focus Search",
       jsonFormatter: "JSON Formatter",
       timestampConverter: "Timestamp Converter",
       textDiff: "Text Diff",

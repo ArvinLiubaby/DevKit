@@ -3,6 +3,7 @@ import { computed, h, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import {
+  NButton,
   NDropdown,
   NLayout,
   NLayoutContent,
@@ -22,6 +23,8 @@ import { useThemeStore } from "../stores/theme";
 import { useLanguageStore } from "../stores/language";
 import { tools } from "../tools/registry";
 import aboutIcon from "../assets/icons/about.svg";
+import homeIcon from "../assets/icons/home.svg";
+import toolsIcon from "../assets/icons/tools.svg";
 // 程序图标（与任务栏/桌面一致）作为弹窗品牌 logo
 import appIcon from "../../src-tauri/icons/icon.png";
 
@@ -35,7 +38,7 @@ const langStore = useLanguageStore();
 
 // 关于弹窗：版本号从 Tauri 运行时读取，浏览器预览回退当前发布版本
 const showAbout = ref(false);
-const appVersion = ref("0.3.0");
+const appVersion = ref("0.5.1");
 if (isTauri()) {
   getVersion().then((v) => (appVersion.value = v));
 }
@@ -84,25 +87,40 @@ const menuThemeOverrides = computed(() => ({
   itemTextColorActiveHover: isDark.value ? "#7cb8ff" : "#1a6fd4",
 }));
 
-// 菜单由工具注册表驱动，新工具注册后自动出现在侧边栏；computed 保证切换语言时实时重渲染
+// 菜单图标：内联样式（icon 渲染函数在 NMenu 作用域执行，scoped class 不生效）
+const toolIcon = (src: string) =>
+  h("img", { src, style: { width: "16px", height: "16px", display: "block", flex: "none" } });
+
+// 菜单结构：首页 → 工具（submenu 收纳全部普通工具）→ 设置类工具（如快捷键）独立为一级项
 const menuOptions = computed<MenuOption[]>(() => [
-  { label: t("app.home"), key: "/" },
+  { label: t("app.home"), key: "/", icon: () => toolIcon(homeIcon) },
   {
-    type: "group",
+    type: "submenu",
     label: t("app.tools"),
-    key: "tools-group",
-    children: tools.map((tool) => ({
+    key: "tools-submenu",
+    icon: () => toolIcon(toolsIcon),
+    children: tools
+      .filter((tool) => tool.category !== "设置")
+      .map((tool) => ({
+        label: t(tool.nameKey),
+        key: tool.path,
+        icon: () => toolIcon(tool.icon),
+      })),
+  },
+  ...tools
+    .filter((tool) => tool.category === "设置")
+    .map((tool) => ({
       label: t(tool.nameKey),
       key: tool.path,
-      // 菜单图标：内联样式（icon 渲染函数在 NMenu 作用域执行，scoped class 不生效）
-      icon: () =>
-        h("img", {
-          src: tool.icon,
-          style: { width: "16px", height: "16px", display: "block", flex: "none" },
-        }),
+      icon: () => toolIcon(tool.icon),
     })),
-  },
 ]);
+
+// "工具"子菜单默认展开；切换语言时 key 不变，展开状态保持
+const expandedKeys = ref<string[]>(["tools-submenu"]);
+function handleUpdateExpanded(keys: string[]) {
+  expandedKeys.value = keys;
+}
 
 const activeKey = computed(() => route.path);
 
@@ -126,8 +144,10 @@ function handleMenuSelect(key: string) {
         <n-menu
           :options="menuOptions"
           :value="activeKey"
+          :expanded-keys="expandedKeys"
           :theme-overrides="menuThemeOverrides"
           @update:value="handleMenuSelect"
+          @update:expanded-keys="handleUpdateExpanded"
         />
         <div class="sider-footer">
           <!-- 关于入口：悬浮圆形按钮，阴影 + hover 上浮交互 -->
@@ -270,6 +290,14 @@ app-sider {
   display: flex;
   justify-content: flex-start;
   padding: 14px 0 16px 14px;
+}
+
+/* 一级菜单项视觉加强：加粗 + 字距，与工具子项拉开层级（首页 / 工具 / 快捷键等）
+   naive 结构：submenu 根为 n-submenu，其下还有一层 n-menu-item */
+:deep(.n-menu > .n-menu-item > .n-menu-item-content .n-menu-item-content-header),
+:deep(.n-menu > .n-submenu > .n-menu-item > .n-menu-item-content .n-menu-item-content-header) {
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 /* 悬浮圆形按钮：液态玻璃质感（半透明磨砂 + 顶部高光 + 边缘高光线），hover 上浮 + 阴影加深 */

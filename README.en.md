@@ -8,6 +8,19 @@
 
 ## ✨ Features
 
+### App Search (Quick Launch)
+
+- **Start-menu style search**: search and launch local programs right from the home page; supports Chinese / English / pinyin / initials / fuzzy matching (type `vsc` to find VS Code, `wx` or `weix` to find WeChat)
+- **Real icons**: search results show each app's real icon (including Microsoft Store apps); falls back to a letter avatar when extraction fails
+- **Activate existing instance**: already-running apps are brought to the front instead of opening a new window (WeChat, Edge, etc.); apps not running start normally
+- **Wide coverage**: Start Menu, desktop shortcuts, and Microsoft Store (UWP) apps are all indexed; uninstall entries are filtered out
+- **One-key summon**: global shortcut `Alt+Space` brings up the main window and focuses the search box
+
+### Base Converter
+
+- **Multi-radix conversion**: decimal / binary / octal / hexadecimal / ASCII with one click
+- **Live conversion**: converts as you type, results shown instantly, copy with one click
+
 ### JSON Formatter
 
 - **Auto-fix non-standard syntax**: automatically detects and fixes single-quoted strings/keys, trailing commas, bare keys, `//` and `/* */` comments, hex/octal/binary numeric literals, unescaped control characters in strings, and non-JSON values such as `undefined`/`NaN`/`Infinity`, with a full fix report
@@ -44,7 +57,7 @@
 
 ### Shortcut Manager
 
-- **Global shortcuts**: keep working while the app runs in background or is minimized; every tool has a preset shortcut that brings the window to front and navigates directly (`Alt+J` JSON / `Alt+T` Timestamp / `Alt+D` Diff / `Alt+I` Image / `Alt+R` Picks / `Alt+K` Shortcuts / `Alt+Space` Main Window)
+- **Global shortcuts**: keep working while the app runs in background or is minimized; every tool has a preset shortcut that brings the window to front and navigates directly (`Alt+J` JSON / `Alt+T` Timestamp / `Alt+D` Diff / `Alt+I` Image / `Alt+R` Picks / `Alt+K` Shortcuts / `Alt+Space` Main Window & Focus Search)
 - **Visual editing**: record a new combo with a key press, applied and persisted instantly; conflict detection, per-item reset and reset-all
 
 ### General
@@ -53,6 +66,7 @@
 - **Dark mode**: toggle between sun/moon with one click, fully adapted light/dark themes
 - **State persistence**: input content and settings are restored when switching between tools
 - **Global shortcuts**: every tool has a preset (customizable) shortcut for one-click access even in background
+- **Single instance**: launching again activates the existing window instead of a second process
 
 ## 📥 Installation
 
@@ -60,24 +74,26 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows | [DevKit_0.4.0_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.4.0_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.4.0_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.1_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.1_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.5.1_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.1_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 After installation, new versions are delivered via **in-app auto-update**.
 
 ## 🚀 Usage
 
-Launch the app and pick a tool from the sidebar:
+Launch the app and type a program name in the search box on the home page to quickly launch it, or pick a tool from the sidebar:
 
+0. **App Search**: type a Chinese name / pinyin / initials (e.g. `wx`) on the home page → results show real icons → press Enter to launch; already-running apps are activated instead of reopened
 1. **JSON Formatter**: paste or type JSON (including non-standard syntax) → auto-format with highlighting → fold/expand any level → edit the output and sync back to the input → copy with one click
-2. **Timestamp Converter**: view and copy the current timestamp → enter a timestamp or datetime for instant bidirectional conversion
-3. **Text Diff**: paste text on both sides, differences are highlighted automatically at line and word level
-4. **Image Converter**: drop in images → pick target format / quality / scale → preview compression live → save individually or export all
-5. **Open Source Picks**: browse hand-picked project cards → open the GitHub page or copy the link in one click
-6. **Shortcuts**: view all global shortcuts → click "Modify" and press a new combo, applied and persisted instantly
-7. **About**: click the floating button at the bottom-left to view app version, intro and the open-source repo
+2. **Base Converter**: enter a decimal/binary/octal/hex/ASCII value → live multi-radix conversion, copy with one click
+3. **Timestamp Converter**: view and copy the current timestamp → enter a timestamp or datetime for instant bidirectional conversion
+4. **Text Diff**: paste text on both sides, differences are highlighted automatically at line and word level
+5. **Image Converter**: drop in images → pick target format / quality / scale → preview compression live → save individually or export all
+6. **Open Source Picks**: browse hand-picked project cards → open the GitHub page or copy the link in one click
+7. **Shortcuts**: view all global shortcuts → click "Modify" and press a new combo, applied and persisted instantly
+8. **About**: click the floating button at the bottom-left to view app version, intro and the open-source repo
 
-> Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly.
+> Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly; `Alt+Space` brings up the main window and focuses the search box.
 
 ## 🛠️ Development
 
@@ -122,6 +138,7 @@ Pushing a version tag (e.g. `v0.1.0`) triggers the [GitHub Actions](.github/work
 src/
 ├── tools/          # Tool modules (registry-driven, lazy-loaded)
 │   ├── json/       # JSON formatter (core logic / highlight / view)
+│   ├── binary/     # Base converter
 │   ├── timestamp/  # Timestamp converter
 │   ├── diff/       # Text diff
 │   ├── image/      # Image converter (core logic / store state / view)
@@ -129,9 +146,9 @@ src/
 │   └── shortcut/   # Shortcut manager (with src-tauri/src/shortcuts.rs)
 ├── locales/        # Locale packs (zh-CN / en-US)
 ├── i18n/           # vue-i18n instance
-├── stores/         # Pinia state (theme, language, tool workspaces)
+├── stores/         # Pinia state (theme, language, tool workspaces, search focus signal)
 └── ...
-src-tauri/          # Tauri backend (Rust, incl. global shortcut manager shortcuts.rs)
+src-tauri/          # Tauri backend (Rust, incl. global shortcut manager shortcuts.rs, program scan/launch programs.rs)
 ```
 
 ## 📄 License

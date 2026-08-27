@@ -4,6 +4,7 @@ import timeIcon from "../assets/icons/time.svg";
 import textIcon from "../assets/icons/text.svg";
 import imageIcon from "../assets/icons/image.svg";
 import githubIcon from "../assets/icons/github.svg";
+import binaryIcon from "../assets/icons/binary.svg";
 import keyboardIcon from "../assets/icons/keyboard.svg";
 
 /**
@@ -63,6 +64,15 @@ export const tools: ToolMeta[] = [
     icon: imageIcon,
     descKey: "tools.image.desc",
     component: () => import("./image/ImageToolView.vue"),
+  },
+  {
+    id: "radix-converter",
+    nameKey: "tools.binary.name",
+    category: "转换",
+    path: "/tools/radix-converter",
+    icon: binaryIcon,
+    descKey: "tools.binary.desc",
+    component: () => import("./binary/BinaryToolView.vue"),
   },
   {
     id: "oss-recommend",
