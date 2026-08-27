@@ -39,7 +39,7 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "DevKit ${{ github.ref_name }}"
-          createUpdaterArtifacts: true
+          createUpdaterArtifacts: v2Compatible
           releaseBody: |
             自动构建发布：DevKit ${{ github.ref_name }}
             - macOS: dmg 安装包（未签名，首次打开请右键→打开）
@@ -48,4 +48,4 @@ jobs:
             更新清单 latest.json 已由构建流程自动生成并签名。
           releaseDraft: false
           prerelease: false
-          args: --bundles dmg
+          args: --bundles app,dmg
