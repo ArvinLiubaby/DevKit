@@ -20,6 +20,8 @@ jobs:
             args: --bundles nsis
           - platform: ubuntu-22.04
             args: --bundles deb
+          - platform: macos-latest
+            args: --bundles dmg
 
     runs-on: ${{ matrix.platform }}
 
@@ -59,6 +61,7 @@ jobs:
             自动构建发布：DevKit ${{ github.ref_name }}
             - Windows: NSIS 安装包（支持应用内自动更新）
             - Linux: deb 安装包（依赖 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2）
+            - macOS: dmg 安装包（未签名，首次打开请右键→打开）
             更新清单 latest.json 已由构建流程自动生成并签名。
           releaseDraft: false
           prerelease: false

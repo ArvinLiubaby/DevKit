@@ -786,7 +786,7 @@ dependencies = [
 
 [[package]]
 name = "devkit"
-version = "0.5.2"
+version = "0.5.3"
 dependencies = [
  "global-hotkey",
  "serde",

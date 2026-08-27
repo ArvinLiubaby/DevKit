@@ -4,6 +4,7 @@
 set -e
 export PATH="$HOME/.cargo/bin:$PATH"
 cd /root/devkit
+npm ci
 export TAURI_SIGNING_PRIVATE_KEY="$(cat src-tauri/.tauri)"
 export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat .tauri-key-password.txt)"
 npm run tauri build -- --bundles deb

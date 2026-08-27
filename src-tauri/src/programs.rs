@@ -56,7 +56,15 @@ pub fn launch_program(path: String) -> Result<(), String> {
             .spawn()
             .map_err(|e| e.to_string())?;
     }
-    #[cfg(not(any(target_os = "windows", target_os = "linux")))]
+    #[cfg(target_os = "macos")]
+    {
+        // open 命令等价 Finder 双击 .app 包，从 Launchpad/访达启动
+        std::process::Command::new("open")
+            .arg(&path)
+            .spawn()
+            .map_err(|e| e.to_string())?;
+    }
+    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
     {
         let _ = path;
         return Err("unsupported platform".into());
@@ -209,6 +217,19 @@ fn scan_programs() -> Vec<ProgramEntry> {
         }
         for dir in dirs {
             scan_desktop(&dir, &mut by_name);
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        // 扫描 /Applications 与 ~/Applications 下的 .app 应用包（用户目录优先覆盖同名）
+        let mut dirs: Vec<PathBuf> = Vec::new();
+        dirs.push(PathBuf::from("/Applications"));
+        if let Ok(home) = std::env::var("HOME") {
+            dirs.push(PathBuf::from(home).join("Applications"));
+        }
+        for dir in dirs {
+            scan_app_bundle(&dir, &mut by_name);
         }
     }
 
@@ -498,5 +519,26 @@ fn scan_desktop(dir: &Path, by_name: &mut HashMap<String, String>) {
                 by_name.insert(n, p.to_string_lossy().into_owned());
             }
         }
+    }
+}
+
+/// 扫描 macOS 应用包（.app 目录）：显示名取包名，忽略隐藏目录
+#[cfg(target_os = "macos")]
+fn scan_app_bundle(dir: &Path, by_name: &mut HashMap<String, String>) {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let p = entry.path();
+        if p.extension().map_or(true, |e| e != "app") {
+            continue;
+        }
+        let Some(stem) = p.file_stem().and_then(|s| s.to_str()) else {
+            continue;
+        };
+        if stem.is_empty() {
+            continue;
+        }
+        by_name.insert(stem.to_string(), p.to_string_lossy().into_owned());
     }
 }

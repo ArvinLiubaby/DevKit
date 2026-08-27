@@ -21,6 +21,7 @@ pub struct ActionDef {
 }
 
 /// 内置动作：每个工具一个全局快捷键，按下后唤起主窗口并跳转对应工具页
+/// macOS 默认用 Command（super）修饰键，其余平台用 Alt（Option/Alt 在 macOS 会输入特殊字符）
 pub const ACTIONS: [ActionDef; 7] = [
     ActionDef {
         id: "toggleWindow",
@@ -29,32 +30,32 @@ pub const ACTIONS: [ActionDef; 7] = [
     },
     ActionDef {
         id: "jsonFormatter",
-        default_key: "alt+J",
+        default_key: if cfg!(target_os = "macos") { "super+J" } else { "alt+J" },
         path: "/tools/json-formatter",
     },
     ActionDef {
         id: "timestampConverter",
-        default_key: "alt+T",
+        default_key: if cfg!(target_os = "macos") { "super+T" } else { "alt+T" },
         path: "/tools/timestamp-converter",
     },
     ActionDef {
         id: "textDiff",
-        default_key: "alt+D",
+        default_key: if cfg!(target_os = "macos") { "super+D" } else { "alt+D" },
         path: "/tools/text-diff",
     },
     ActionDef {
         id: "imageConverter",
-        default_key: "alt+I",
+        default_key: if cfg!(target_os = "macos") { "super+I" } else { "alt+I" },
         path: "/tools/image-converter",
     },
     ActionDef {
         id: "ossRecommend",
-        default_key: "alt+R",
+        default_key: if cfg!(target_os = "macos") { "super+R" } else { "alt+R" },
         path: "/tools/oss-recommend",
     },
     ActionDef {
         id: "shortcutManager",
-        default_key: "alt+K",
+        default_key: if cfg!(target_os = "macos") { "super+K" } else { "alt+K" },
         path: "/tools/shortcuts",
     },
 ];

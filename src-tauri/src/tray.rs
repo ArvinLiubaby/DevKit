@@ -20,11 +20,20 @@ pub fn init(app: &mut tauri::App) -> tauri::Result<()> {
     let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
 
     let tray = TrayIconBuilder::with_id("devkit-tray")
-        .icon(
-            app.default_window_icon()
-                .expect("missing default window icon")
-                .clone(),
-        )
+        .icon({
+            #[cfg(target_os = "macos")]
+            {
+                // macOS 菜单栏要求 Template 图标（纯黑+透明），系统自动适配深浅色模式
+                tauri::image::Image::from_bytes(include_bytes!("../icons/tray-iconTemplate.png"))
+                    .expect("invalid tray template icon")
+            }
+            #[cfg(not(target_os = "macos"))]
+            {
+                app.default_window_icon()
+                    .expect("missing default window icon")
+                    .clone()
+            }
+        })
         .tooltip("DevKit")
         .menu(&menu)
         // 左键单击不弹菜单，直接显示主窗口（右键呼出菜单，符合 Windows 托盘惯例）

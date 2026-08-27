@@ -6,6 +6,11 @@ mod tray;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // 禁用 WebKitGTK DMABUF 渲染器：部分 Linux 显卡/驱动（如 Linux Mint）下
+    // 默认启用会白屏，退回软件渲染保证界面稳定显示（必须在 WebKit 初始化前设置）
+    #[cfg(target_os = "linux")]
+    std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+
     tauri::Builder::default()
         // 单实例：重复启动时激活已有主窗口（切换到它而非新开实例）
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
