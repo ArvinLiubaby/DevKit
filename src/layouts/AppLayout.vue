@@ -38,7 +38,7 @@ const langStore = useLanguageStore();
 
 // 关于弹窗：版本号从 Tauri 运行时读取，浏览器预览回退当前发布版本
 const showAbout = ref(false);
-const appVersion = ref("0.5.1");
+const appVersion = ref("0.5.2");
 if (isTauri()) {
   getVersion().then((v) => (appVersion.value = v));
 }

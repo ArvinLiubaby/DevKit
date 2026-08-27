@@ -66,6 +66,7 @@
 - **Dark mode**: toggle between sun/moon with one click, fully adapted light/dark themes
 - **State persistence**: input content and settings are restored when switching between tools
 - **Global shortcuts**: every tool has a preset (customizable) shortcut for one-click access even in background
+- **System tray**: clicking the close button minimizes the app to the system tray (it keeps running in background); left-click the tray icon to restore, right-click menu to show or quit
 - **Single instance**: launching again activates the existing window instead of a second process
 
 ## 📥 Installation
@@ -74,8 +75,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows | [DevKit_0.5.1_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.1_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.5.1_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.1_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.2_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.2_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.5.2_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.2_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 After installation, new versions are delivered via **in-app auto-update**.
 
@@ -93,7 +94,7 @@ Launch the app and type a program name in the search box on the home page to qui
 7. **Shortcuts**: view all global shortcuts → click "Modify" and press a new combo, applied and persisted instantly
 8. **About**: click the floating button at the bottom-left to view app version, intro and the open-source repo
 
-> Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly; `Alt+Space` brings up the main window and focuses the search box.
+> Tip: while the app is minimized or running in background, press any tool shortcut (e.g. `Alt+J`) to bring the window to front and navigate directly; `Alt+Space` brings up the main window and focuses the search box. Clicking the close button minimizes the app to the system tray; left-click the tray icon to restore, right-click menu to quit.
 
 ## 🛠️ Development
 
