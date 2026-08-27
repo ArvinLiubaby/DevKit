@@ -30,3 +30,6 @@ src-tauri/.tauri*
 *.njsproj
 *.sln
 *.sw?
+
+# 发布产物（每次发布临时生成，手动重建后上传至 Release）
+latest.json
