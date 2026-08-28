@@ -77,7 +77,7 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.3/DevKit_0.5.3_aarch64.dmg) | Apple Silicon（M 系列），未签名，首次打开请右键 → 打开；macOS 默认不打包，此版本为最后构建 |
+| macOS | 自行编译 | 官方不再提供预构建安装包，建议开发者自行编译打包（`npm run tauri build -- --bundles app,dmg`，见[开发指南](#开发指南)） |
 | Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
 | Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
@@ -120,15 +120,15 @@ npm run tauri build  # 构建安装包（Windows: NSIS / Linux: deb）
 npm run lint         # 代码检查
 ```
 
-跨平台打包：Windows 用 [scripts/build-win.ps1](scripts/build-win.ps1)，Linux 用 [scripts/build-deb.sh](scripts/build-deb.sh)（WSL 内执行），macOS 可在 [Actions](.github/workflows/release.yml) 手动触发构建（默认不打包）。
+跨平台打包：Windows 用 [scripts/build-win.ps1](scripts/build-win.ps1)，Linux 用 [scripts/build-deb.sh](scripts/build-deb.sh)（WSL 内执行）；macOS 不提供预构建包，建议开发者本地执行 `npm run tauri build -- --bundles app,dmg` 自行编译（也可在 [Actions](.github/workflows/release.yml) 手动触发构建，默认不打包）。
 
 ### 发布流程
 
-默认只发布 Windows / Linux（本地构建），需要 macOS 包时手动触发 [GitHub Actions](.github/workflows/release.yml) 并填写 tag 名称：
+默认只发布 Windows / Linux（本地构建）；macOS 不提供预构建安装包，建议开发者自行编译打包：
 
 - Windows → 本地执行 `scripts/build-win.ps1`（NSIS 安装包 + 签名）
 - Linux → 本地执行 `scripts/build-deb.sh`（WSL，deb 安装包 + 签名）
-- macOS（可选）→ Actions 手动触发，dmg 安装包 + app.tar.gz 更新包（自动签名）+ `latest.json` 更新清单
+- macOS（可选）→ 本地编译：`npm run tauri build -- --bundles app,dmg`（未签名，需自行处理签名与公证）；或手动触发 Actions 构建
 - 构建产物与签名上传到对应 Release 后，应用内自动更新即可检测到新版本
 
 > 发布前需在仓库 Secrets 配置 `TAURI_SIGNING_PRIVATE_KEY` 与 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`（自动更新签名密钥）。

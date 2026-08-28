@@ -76,7 +76,7 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.3/DevKit_0.5.3_aarch64.dmg) | Apple Silicon (M series), unsigned - right-click → Open on first launch; macOS is not built by default, this is the last build |
+| macOS | Build yourself | No pre-built installer is provided. Developers are advised to compile and package locally (`npm run tauri build -- --bundles app,dmg`, see [Development Guide](#development-guide)) |
 | Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
 | Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
@@ -119,15 +119,15 @@ npm run tauri build  # build installers (Windows: NSIS / Linux: deb)
 npm run lint         # lint check
 ```
 
-Cross-platform packaging: Windows via [scripts/build-win.ps1](scripts/build-win.ps1), Linux via [scripts/build-deb.sh](scripts/build-deb.sh) (inside WSL); macOS can be triggered manually on [Actions](.github/workflows/release.yml) (not built by default).
+Cross-platform packaging: Windows via [scripts/build-win.ps1](scripts/build-win.ps1), Linux via [scripts/build-deb.sh](scripts/build-deb.sh) (inside WSL); macOS has no pre-built package - developers are advised to run `npm run tauri build -- --bundles app,dmg` locally (or trigger [Actions](.github/workflows/release.yml) manually; not built by default).
 
 ### Release Process
 
-By default only Windows / Linux are released (local builds); when a macOS package is needed, trigger [GitHub Actions](.github/workflows/release.yml) manually and enter the tag name:
+By default only Windows / Linux are released (local builds); macOS has no pre-built installer - developers are advised to compile and package it themselves:
 
 - Windows → run `scripts/build-win.ps1` locally (NSIS installer + signature)
 - Linux → run `scripts/build-deb.sh` locally (WSL, deb installer + signature)
-- macOS (optional) → manual Actions run, dmg installer + app.tar.gz update package (signed) + `latest.json` update manifest
+- macOS (optional) → build locally: `npm run tauri build -- --bundles app,dmg` (unsigned; handle signing and notarization yourself); or trigger an Actions build manually
 - Once artifacts and signatures are uploaded to the release, in-app auto-update picks up the new version
 
 > Before releasing, configure `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in the repository Secrets (auto-update signing keys).

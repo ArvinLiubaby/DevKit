@@ -296,8 +296,9 @@ async function launch(entry: ProgramEntry) {
 }
 
 .hero-sub {
-  margin: 0;
+  margin: 14px 0 0;
   font-size: 14px;
+  letter-spacing: 0.4px;
   color: rgba(128, 128, 128, 0.95);
 }
 
