@@ -18,7 +18,6 @@ export default {
   },
   home: {
     welcome: "欢迎使用 DevKit",
-    subtitle: "本地优先、离线可用、跨平台的开发者效率工具集",
     availableTools: "可用工具",
   },
   search: {

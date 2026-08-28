@@ -18,7 +18,6 @@ export default {
   },
   home: {
     welcome: "Welcome to DevKit",
-    subtitle: "A local-first, offline, cross-platform developer toolbox",
     availableTools: "Available Tools",
   },
   search: {

@@ -198,7 +198,6 @@ async function launch(entry: ProgramEntry) {
     <!-- 欢迎区 -->
     <section class="hero">
       <h1 class="hero-title">{{ t("home.welcome") }}</h1>
-      <p class="hero-sub">{{ t("home.subtitle") }}</p>
 
       <!-- 程序搜索：类似开始菜单，↑↓ 选择 + Enter 启动 -->
       <div class="search-box">
@@ -281,7 +280,7 @@ async function launch(entry: ProgramEntry) {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 48px 0 56px;
+  padding: 44px 0 48px;
 }
 
 .hero-title {
@@ -293,13 +292,6 @@ async function launch(entry: ProgramEntry) {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.hero-sub {
-  margin: 14px 0 0;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  color: rgba(128, 128, 128, 0.95);
 }
 
 /* ---------- 程序搜索（类似开始菜单） ---------- */
@@ -548,10 +540,6 @@ async function launch(entry: ProgramEntry) {
 }
 
 /* ---------- 深色模式 ---------- */
-.dark .hero-sub {
-  color: rgba(200, 200, 200, 0.8);
-}
-
 .dark .tool-card {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.12);
