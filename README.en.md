@@ -77,8 +77,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 | Platform | Installer | Notes |
 | --- | --- | --- |
 | macOS | Build yourself | No pre-built installer is provided. Developers are advised to compile and package locally (`npm run tauri build -- --bundles app,dmg`, see [Development Guide](#development-guide)) |
-| Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.6_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.6_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.5.6_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.6_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux installers are built by local scripts (see [Release Process](#release-process)); always check the [Releases page](https://github.com/ArvinLiubaby/DevKit/releases) for the latest. 
 

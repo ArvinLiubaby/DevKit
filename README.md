@@ -78,8 +78,8 @@
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
 | macOS | 自行编译 | 官方不再提供预构建安装包，建议开发者自行编译打包（`npm run tauri build -- --bundles app,dmg`，见[开发指南](#开发指南)） |
-| Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.6_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.6_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.5.6_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.6_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux 安装包由本地构建脚本生成（见[发布流程](#发布流程)），最新版本请以 [Releases 页](https://github.com/ArvinLiubaby/DevKit/releases)为准。
 
