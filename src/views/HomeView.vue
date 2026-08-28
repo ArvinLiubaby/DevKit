@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { NButton, NText, useMessage } from "naive-ui";
-import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { useMessage } from "naive-ui";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import { pinyin } from "pinyin-pro";
 import { tools } from "../tools/registry";
@@ -13,7 +12,6 @@ const message = useMessage();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.theme === "dark");
 const { t } = useI18n();
-const clipboardContent = ref("");
 
 // 首页"可用工具"卡片：只展示工具类，设置类（如快捷键）不参与
 const toolCards = computed(() => tools.filter((tool) => tool.category !== "设置"));
@@ -193,17 +191,6 @@ async function launch(entry: ProgramEntry) {
   }
 }
 
-async function copyWelcome() {
-  try {
-    // 验证 clipboard-manager 插件链路（Rust 插件 + capabilities 权限 + JS API）
-    await writeText("DevKit - local-first developer toolbox");
-    message.success(t("home.copied"));
-    // 读回验证，用于排查剪贴板被外部占用/写入失败等问题
-    clipboardContent.value = await readText();
-  } catch (err) {
-    message.error(t("home.copyFailed", { err: String(err) }));
-  }
-}
 </script>
 
 <template>
@@ -255,20 +242,6 @@ async function copyWelcome() {
         </div>
       </div>
 
-      <n-button class="copy-btn" @click="copyWelcome">
-        <template #icon>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="copy-icon">
-            <path
-              fill="currentColor"
-              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
-            />
-          </svg>
-        </template>
-        {{ t("home.copyWelcome") }}
-      </n-button>
-      <p v-if="clipboardContent" class="clipboard-check">
-        <n-text depth="3" size="small">{{ t("home.clipboardCheck", { content: clipboardContent }) }}</n-text>
-      </p>
     </section>
 
     <!-- 工具卡片 -->
@@ -335,22 +308,6 @@ async function copyWelcome() {
   margin: 0;
   font-size: 14px;
   color: rgba(128, 128, 128, 0.95);
-}
-
-.copy-btn {
-  margin-top: 24px;
-  border-radius: 999px;
-  padding: 0 22px;
-  font-weight: 500;
-}
-
-.copy-icon {
-  width: 14px;
-  height: 14px;
-}
-
-.clipboard-check {
-  margin: 14px 0 0;
 }
 
 /* ---------- 程序搜索（类似开始菜单） ---------- */

@@ -17,10 +17,6 @@ export default {
   home: {
     welcome: "Welcome to DevKit",
     subtitle: "A local-first, offline, cross-platform developer toolbox",
-    copyWelcome: "Copy Welcome",
-    copied: "Copied to clipboard",
-    clipboardCheck: "Clipboard readback: {content}",
-    copyFailed: "Clipboard write failed: {err}",
     availableTools: "Available Tools",
   },
   search: {
@@ -95,7 +91,6 @@ export default {
     closeTip: "Dismiss",
     inputTitle: "Original Input",
     outputTitle: "Formatted Output",
-    foldHint: "Click the arrow to collapse / expand a block",
     editHint: "Changes will sync back to the original input",
     edit: "Edit",
     done: "Done",

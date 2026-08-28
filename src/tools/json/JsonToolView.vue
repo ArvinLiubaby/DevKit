@@ -370,8 +370,7 @@ const outputStats = computed(() =>
         <div class="panel-head">
           <span class="panel-dot out" aria-hidden="true"></span>
           <span class="panel-title">{{ t("json.outputTitle") }}</span>
-          <n-text v-if="!editing" depth="3" size="small">{{ t("json.foldHint") }}</n-text>
-          <n-text v-else depth="3" size="small">{{ t("json.editHint") }}</n-text>
+          <n-text v-if="editing" depth="3" size="small">{{ t("json.editHint") }}</n-text>
           <div class="head-actions">
             <n-button
               v-if="editing"

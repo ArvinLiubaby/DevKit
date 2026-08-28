@@ -17,10 +17,6 @@ export default {
   home: {
     welcome: "欢迎使用 DevKit",
     subtitle: "本地优先、离线可用、跨平台的开发者效率工具集",
-    copyWelcome: "复制欢迎语",
-    copied: "已复制到剪贴板",
-    clipboardCheck: "剪贴板读回验证：{content}",
-    copyFailed: "剪贴板写入失败：{err}",
     availableTools: "可用工具",
   },
   search: {
@@ -95,7 +91,6 @@ export default {
     closeTip: "关闭提示",
     inputTitle: "原始输入",
     outputTitle: "格式化输出",
-    foldHint: "点击行首箭头折叠 / 展开代码块",
     editHint: "修改将自动同步到原始输入",
     edit: "编辑",
     done: "完成",
