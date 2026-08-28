@@ -13,6 +13,8 @@ export default {
     aboutSlogan: "A local-first, offline, cross-platform developer toolbox",
     openFailed: "Failed to open link: {err}",
     close: "Close",
+    minimize: "Minimize",
+    maximize: "Maximize / Restore",
   },
   home: {
     welcome: "Welcome to DevKit",

@@ -64,6 +64,7 @@
 
 - **中英双语**：一键切换语言，界面文案与组件文案全量跟随，选择持久化
 - **深色模式**：太阳/月亮一键切换，全界面明暗适配
+- **无边框状态栏**：窗口标题栏与工具条合二为一，顶部状态栏集成语言切换、深色模式与窗口控制（最小化/最大化/关闭），拖拽空白处移动窗口，双击最大化
 - **状态保留**：切换工具页面后输入内容与设置原样恢复
 - **全局快捷键**：每个工具预设快捷键（可自定义），后台也能一键直达
 - **系统托盘**：点击关闭按钮最小化到系统托盘（程序后台继续运行），托盘左键单击恢复窗口、右键菜单可显示或退出；macOS 使用 Template 图标自动适配深浅色菜单栏
@@ -77,8 +78,8 @@
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
 | macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.3/DevKit_0.5.3_aarch64.dmg) | Apple Silicon（M 系列），未签名，首次打开请右键 → 打开；macOS 默认不打包，此版本为最后构建 |
-| Windows | [DevKit_0.5.4_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.4_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
-| Linux | [DevKit_0.5.4_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.4_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS 安装包，免管理员安装，支持应用内自动更新 |
+| Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | 适用于 Debian/Ubuntu 系发行版，需安装 libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux 安装包由本地构建脚本生成（见[发布流程](#发布流程)），最新版本请以 [Releases 页](https://github.com/ArvinLiubaby/DevKit/releases)为准。
 

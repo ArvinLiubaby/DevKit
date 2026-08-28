@@ -198,7 +198,6 @@ async function launch(entry: ProgramEntry) {
     <!-- 欢迎区 -->
     <section class="hero">
       <h1 class="hero-title">{{ t("home.welcome") }}</h1>
-      <div class="hero-accent" aria-hidden="true"></div>
       <p class="hero-sub">{{ t("home.subtitle") }}</p>
 
       <!-- 程序搜索：类似开始菜单，↑↓ 选择 + Enter 启动 -->
@@ -294,14 +293,6 @@ async function launch(entry: ProgramEntry) {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.hero-accent {
-  width: 44px;
-  height: 3px;
-  margin: 18px 0 14px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #6366f1, #22d3ee);
 }
 
 .hero-sub {

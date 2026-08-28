@@ -13,6 +13,8 @@ export default {
     aboutSlogan: "本地优先、离线可用、跨平台的开发者效率工具集",
     openFailed: "打开链接失败：{err}",
     close: "关闭",
+    minimize: "最小化",
+    maximize: "最大化 / 还原",
   },
   home: {
     welcome: "欢迎使用 DevKit",

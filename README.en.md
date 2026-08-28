@@ -64,6 +64,7 @@
 
 - **Bilingual UI**: switch between Chinese and English with one click; all UI and component texts follow, preference is persisted
 - **Dark mode**: toggle between sun/moon with one click, fully adapted light/dark themes
+- **Frameless status bar**: title bar and toolbar merged into one; the top status bar integrates language switching, dark mode and window controls (minimize/maximize/close). Drag the empty area to move the window, double-click to maximize
 - **State persistence**: input content and settings are restored when switching between tools
 - **Global shortcuts**: every tool has a preset (customizable) shortcut for one-click access even in background
 - **System tray**: clicking the close button minimizes the app to the system tray (it keeps running in background); left-click the tray icon to restore, right-click menu to show or quit; on macOS a Template icon adapts to light/dark menu bars automatically
@@ -76,8 +77,8 @@ Download the installer for your platform from [GitHub Releases](https://github.c
 | Platform | Installer | Notes |
 | --- | --- | --- |
 | macOS | [DevKit_0.5.3_aarch64.dmg](https://github.com/ArvinLiubaby/DevKit/releases/download/v0.5.3/DevKit_0.5.3_aarch64.dmg) | Apple Silicon (M series), unsigned - right-click → Open on first launch; macOS is not built by default, this is the last build |
-| Windows | [DevKit_0.5.4_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.4_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
-| Linux | [DevKit_0.5.4_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.4_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
+| Windows | [DevKit_0.5.5_x64-setup.exe](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_x64-setup.exe) | NSIS installer, no admin required, in-app auto-update supported |
+| Linux | [DevKit_0.5.5_amd64.deb](https://github.com/ArvinLiubaby/DevKit/releases/latest/download/DevKit_0.5.5_amd64.deb) | For Debian/Ubuntu-based distros; requires libwebkit2gtk-4.1-0 / libgtk-3-0 / librsvg2-2 |
 
 > Windows / Linux installers are built by local scripts (see [Release Process](#release-process)); always check the [Releases page](https://github.com/ArvinLiubaby/DevKit/releases) for the latest. 
 

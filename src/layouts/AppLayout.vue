@@ -16,6 +16,7 @@ import {
 } from "naive-ui";
 import type { DropdownOption, MenuOption } from "naive-ui";
 import { isTauri } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { getVersion } from "@tauri-apps/api/app";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useThemeStore } from "../stores/theme";
@@ -126,6 +127,24 @@ const activeKey = computed(() => route.path);
 function handleMenuSelect(key: string) {
   router.push(key);
 }
+
+/* ------------------------------------------------------------------ */
+/* 自定义状态栏：窗口控制（无边框窗口，decorations: false）             */
+/* ------------------------------------------------------------------ */
+// 浏览器预览（npm run dev）不展示窗口按钮，仅 Tauri 环境显示
+const win = isTauri() ? getCurrentWindow() : null;
+
+async function minimize() {
+  await win?.minimize();
+}
+
+async function toggleMaximize() {
+  await win?.toggleMaximize();
+}
+
+async function closeWindow() {
+  await win?.close();
+}
 </script>
 
 <template>
@@ -168,7 +187,8 @@ function handleMenuSelect(key: string) {
     </n-layout-sider>
     <n-layout>
       <n-layout-header bordered class="app-header" :class="{ dark: isDark }">
-        <span class="brand">DevKit</span>
+        <span class="brand" data-tauri-drag-region @dblclick="toggleMaximize">DevKit</span>
+        <div class="header-drag" data-tauri-drag-region @dblclick="toggleMaximize"></div>
         <div class="header-actions">
           <!-- 语言：外层 n-dropdown 提供点击菜单，内层 n-tooltip 直接包 button 提供 hover 提示
                （n-tooltip 的 trigger 须直接是原生元素，夹组件会导致 hover 事件失效） -->
@@ -219,6 +239,40 @@ function handleMenuSelect(key: string) {
             </template>
             {{ t("app.switchTheme") }}
           </n-tooltip>
+        </div>
+
+        <!-- 窗口控制按钮：无边框窗口的自绘标题栏按钮（仅 Tauri 环境显示） -->
+        <div v-if="isTauri()" class="win-controls">
+          <button
+            class="win-btn"
+            type="button"
+            :aria-label="t('app.minimize')"
+            @click="minimize"
+          >
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <path d="M0 5h10" stroke="currentColor" stroke-width="1.1" />
+            </svg>
+          </button>
+          <button
+            class="win-btn"
+            type="button"
+            :aria-label="t('app.maximize')"
+            @click="toggleMaximize"
+          >
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <rect x="0.6" y="0.6" width="8.8" height="8.8" fill="none" stroke="currentColor" stroke-width="1.1" />
+            </svg>
+          </button>
+          <button
+            class="win-btn win-btn-close"
+            type="button"
+            :aria-label="t('app.close')"
+            @click="closeWindow"
+          >
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1" />
+            </svg>
+          </button>
         </div>
       </n-layout-header>
       <n-layout-content class="app-content" content-style="padding: 16px">
@@ -470,9 +524,10 @@ function handleMenuSelect(key: string) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
-  padding: 0 16px;
+  height: 40px;
+  padding: 0 4px 0 16px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  user-select: none;
 }
 
 .app-header.dark {
@@ -488,6 +543,14 @@ function handleMenuSelect(key: string) {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  cursor: default;
+}
+
+/* 中间空白区域：占满剩余空间，作为窗口拖拽区 */
+.header-drag {
+  flex: 1;
+  align-self: stretch;
+  cursor: default;
 }
 
 /* 路由切换过渡：淡出快、淡入带轻微上移 */
@@ -511,7 +574,7 @@ function handleMenuSelect(key: string) {
 }
 
 .app-content {
-  height: calc(100vh - 48px);
+  height: calc(100vh - 40px);
 }
 
 .theme-switch {
@@ -552,6 +615,45 @@ function handleMenuSelect(key: string) {
 .icon-btn svg {
   width: 17px;
   height: 17px;
+}
+
+/* 窗口控制按钮组：紧凑排列，关闭按钮 hover 红色警示 */
+.win-controls {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 2px;
+}
+
+.win-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.win-btn svg {
+  width: 10px;
+  height: 10px;
+}
+
+.win-btn:hover {
+  background: rgba(128, 128, 128, 0.16);
+}
+
+.app-header.dark .win-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.win-btn-close:hover {
+  background: #e81123 !important;
+  color: #fff;
 }
 
 /* 主题图标切换微动画：旋转 + 缩放渐入 */
