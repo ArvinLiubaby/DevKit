@@ -11,7 +11,6 @@ import {
   NLayoutSider,
   NMenu,
   NModal,
-  NText,
   NTooltip,
   useMessage,
 } from "naive-ui";
@@ -169,7 +168,7 @@ function handleMenuSelect(key: string) {
     </n-layout-sider>
     <n-layout>
       <n-layout-header bordered class="app-header" :class="{ dark: isDark }">
-        <n-text strong>DevKit</n-text>
+        <span class="brand">DevKit</span>
         <div class="header-actions">
           <!-- 语言：外层 n-dropdown 提供点击菜单，内层 n-tooltip 直接包 button 提供 hover 提示
                （n-tooltip 的 trigger 须直接是原生元素，夹组件会导致 hover 事件失效） -->
@@ -223,7 +222,11 @@ function handleMenuSelect(key: string) {
         </div>
       </n-layout-header>
       <n-layout-content class="app-content" content-style="padding: 16px">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition name="page" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </n-layout-content>
     </n-layout>
   </n-layout>
@@ -259,7 +262,7 @@ function handleMenuSelect(key: string) {
       <n-button type="primary" size="small" block class="about-repo" @click="openRepo">
         {{ t("app.aboutRepo") }}
       </n-button>
-      <div class="about-copy">© 2026 Creek · MIT License</div>
+      <div class="about-copy">© 2026 Creek · CC BY-NC 4.0</div>
     </div>
   </n-modal>
 </template>
@@ -270,7 +273,7 @@ function handleMenuSelect(key: string) {
 }
 
 /* 导航栏与工作区拉开层次：浅色浅灰 / 深色深灰，避免与内容区融为一体 */
-app-sider {
+.app-sider {
   background: #f5f6f8;
 }
 
@@ -469,6 +472,42 @@ app-sider {
   justify-content: space-between;
   height: 48px;
   padding: 0 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+.app-header.dark {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 品牌字：与首页 hero 标题同款渐变 */
+.brand {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(120deg, #6366f1, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 路由切换过渡：淡出快、淡入带轻微上移 */
+.page-enter-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.page-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.page-leave-to {
+  opacity: 0;
 }
 
 .app-content {

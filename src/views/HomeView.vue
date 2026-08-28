@@ -488,9 +488,23 @@ async function copyWelcome() {
 }
 
 .section-title {
+  position: relative;
   margin: 0 0 18px;
+  padding-left: 13px;
   font-size: 18px;
   font-weight: 600;
+}
+
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #6366f1, #22d3ee);
 }
 
 .tool-grid {

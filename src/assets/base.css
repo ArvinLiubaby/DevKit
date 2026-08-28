@@ -1,0 +1,70 @@
+/**
+ * 全局样式基线：字体、滚动条、选区、焦点环等应用级规范。
+ * 组件级样式仍在各自 SFC 内，本文件只放跨页面统一的基础体验。
+ */
+
+/* ---------- 字体与渲染 ---------- */
+body {
+  font-family:
+    Inter,
+    "Segoe UI",
+    "Microsoft YaHei UI",
+    "Microsoft YaHei",
+    "PingFang SC",
+    "Noto Sans SC",
+    system-ui,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- 滚动条：细窄圆角，深浅主题通用 ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.35) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-color: rgba(128, 128, 128, 0.38);
+  background-clip: content-box;
+  transition: background-color 0.15s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.55);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ---------- 文本选区：品牌蓝淡底 ---------- */
+::selection {
+  background: rgba(64, 152, 252, 0.28);
+}
+
+/* ---------- 键盘焦点环：仅键盘导航可见，避免鼠标点击出现描边 ---------- */
+:focus-visible {
+  outline: 2px solid rgba(64, 152, 252, 0.65);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* naive-ui 组件自身带焦点样式，避免双重描边 */
+.n-button:focus-visible,
+.n-input:focus-visible,
+.n-select:focus-visible {
+  outline: none;
+}

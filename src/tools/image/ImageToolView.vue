@@ -14,7 +14,6 @@ import {
   NPopconfirm,
   NSelect,
   NSlider,
-  NText,
   useMessage,
 } from "naive-ui";
 import {
@@ -28,6 +27,7 @@ import {
   type ImageFormat,
 } from "./core";
 import { useImageToolStore, type ImageItem } from "../../stores/imageTool";
+import { useThemeStore } from "../../stores/theme";
 
 const message = useMessage();
 const { t } = useI18n();
@@ -36,11 +36,17 @@ const { t } = useI18n();
 const store = useImageToolStore();
 const { items, format, quality, scale } = storeToRefs(store);
 
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.theme === "dark");
+
 const formatOptions = IMAGE_FORMATS.map((f) => ({ label: f.toUpperCase(), value: f }));
 // PNG 为无损格式，质量滑块禁用
 const qualityEnabled = computed(() => formatSupportsQuality(format.value));
 
 const hasDone = computed(() => items.value.some((i) => i.status === "done"));
+
+// 缩放快捷按钮档位
+const scalePresets = [100, 75, 50, 25];
 
 /* ------------------------------------------------------------------ */
 /* 导入：点击选择 / 拖拽                                               */
@@ -192,9 +198,9 @@ function deltaText(item: ImageItem): string {
   return t("image.unchanged");
 }
 
-function deltaType(item: ImageItem): "success" | "warning" | "default" {
+function deltaClass(item: ImageItem): string {
   const d = deltaOf(item);
-  return d > 0 ? "success" : d < 0 ? "warning" : "default";
+  return d > 0 ? "good" : d < 0 ? "warn" : "flat";
 }
 
 function errText(item: ImageItem): string {
@@ -203,55 +209,64 @@ function errText(item: ImageItem): string {
 </script>
 
 <template>
-  <div class="img-tool">
-    <!-- 设置面板 -->
+  <div class="img-tool" :class="{ dark: isDark }">
+    <!-- 设置面板：设置项横排 + 操作按钮右对齐 -->
     <div class="control-panel">
       <div class="setting-row">
         <div class="setting">
-          <n-text depth="3" size="small">{{ t("image.format") }}</n-text>
+          <span class="setting-label">{{ t("image.format") }}</span>
           <n-select v-model:value="format" :options="formatOptions" style="width: 120px" size="small" />
         </div>
         <div class="setting">
-          <n-text depth="3" size="small">{{ t("image.quality") }}：{{ quality }}</n-text>
+          <span class="setting-label">{{ t("image.quality") }}<b class="quality-num">{{ quality }}</b></span>
           <n-slider
             v-model:value="quality"
             :min="0"
             :max="100"
             :step="1"
             :disabled="!qualityEnabled"
-            style="width: 160px"
+            style="width: 170px"
           />
-          <n-text depth="3" size="tiny">{{ t("image.qualityHint") }}</n-text>
         </div>
         <div class="setting">
-          <n-text depth="3" size="small">{{ t("image.scale") }}</n-text>
+          <span class="setting-label">{{ t("image.scale") }}</span>
           <n-input-number v-model:value="scale" :min="1" :max="200" size="small" style="width: 90px" />
           <div class="scale-btns">
-            <n-button size="tiny" secondary @click="scale = 100">100%</n-button>
-            <n-button size="tiny" secondary @click="scale = 75">75%</n-button>
-            <n-button size="tiny" secondary @click="scale = 50">50%</n-button>
-            <n-button size="tiny" secondary @click="scale = 25">25%</n-button>
+            <n-button
+              v-for="p in scalePresets"
+              :key="p"
+              size="tiny"
+              secondary
+              :class="{ active: scale === p }"
+              @click="scale = p"
+            >
+              {{ p }}%
+            </n-button>
           </div>
-          <n-text depth="3" size="tiny">{{ t("image.scaleHint") }}</n-text>
+        </div>
+        <div class="panel-actions">
+          <n-button size="small" type="primary" :disabled="!hasDone" @click="saveAll">
+            {{ t("image.saveAll") }}
+          </n-button>
+          <n-popconfirm :positive-text="t('image.ok')" :negative-text="t('image.cancel')" @positive-click="store.clearAll">
+            <template #trigger>
+              <n-button size="small" :disabled="!items.length">{{ t("image.clear") }}</n-button>
+            </template>
+            {{ t("image.clearConfirm") }}
+          </n-popconfirm>
         </div>
       </div>
-      <div class="action-row">
-        <n-button size="small" type="primary" :disabled="!hasDone" @click="saveAll">
-          {{ t("image.saveAll") }}
-        </n-button>
-        <n-popconfirm :positive-text="t('image.ok')" :negative-text="t('image.cancel')" @positive-click="store.clearAll">
-          <template #trigger>
-            <n-button size="small" :disabled="!items.length">{{ t("image.clear") }}</n-button>
-          </template>
-          {{ t("image.clearConfirm") }}
-        </n-popconfirm>
+      <div class="setting-hints">
+        <span>{{ t("image.qualityHint") }}</span>
+        <span class="hint-sep" aria-hidden="true">·</span>
+        <span>{{ t("image.scaleHint") }}</span>
       </div>
     </div>
 
-    <!-- 导入区：点击 / 拖拽 -->
+    <!-- 导入区：点击 / 拖拽（已有图片时收紧高度） -->
     <div
       class="dropzone"
-      :class="{ active: dragActive }"
+      :class="{ active: dragActive, compact: items.length > 0 }"
       role="button"
       tabindex="0"
       @click="fileInput?.click()"
@@ -260,14 +275,16 @@ function errText(item: ImageItem): string {
       @dragleave.prevent="dragActive = false"
       @drop.prevent="onDrop"
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"
-        />
-      </svg>
-      <n-text>{{ t("image.selectImages") }}</n-text>
-      <n-text depth="3" size="tiny">{{ t("image.selectHint", { max: store.MAX_IMAGES }) }}</n-text>
+      <div class="drop-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            fill="currentColor"
+            d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"
+          />
+        </svg>
+      </div>
+      <span class="drop-title">{{ t("image.selectImages") }}</span>
+      <span class="drop-hint">{{ t("image.selectHint", { max: store.MAX_IMAGES }) }}</span>
     </div>
     <input ref="fileInput" type="file" accept="image/*" multiple hidden @change="onFileChange" />
 
@@ -285,14 +302,13 @@ function errText(item: ImageItem): string {
             <span class="tag out">{{ t("image.output") }}</span>
             <template v-if="item.status === 'done' && item.outSize != null">
               <span>{{ t("image.sizeInfo", { width: item.outWidth, height: item.outHeight }) }} · {{ formatBytes(item.outSize) }}</span>
-              <n-text :type="deltaType(item)" size="small">{{ deltaText(item) }}</n-text>
+              <span class="delta" :class="deltaClass(item)">{{ deltaText(item) }}</span>
             </template>
-            <n-text v-else-if="item.status === 'processing'" depth="3" size="small">
+            <span v-else-if="item.status === 'processing'" class="processing">
+              <span class="processing-dot" aria-hidden="true"></span>
               {{ t("image.processing") }}
-            </n-text>
-            <n-text v-else-if="item.status === 'error'" type="error" size="small">
-              {{ errText(item) }}
-            </n-text>
+            </span>
+            <span v-else-if="item.status === 'error'" class="delta err">{{ errText(item) }}</span>
           </div>
         </div>
         <div class="actions">
@@ -313,30 +329,48 @@ function errText(item: ImageItem): string {
 .img-tool {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   height: 100%;
 }
 
-/* 设置面板：卡片容器 */
+/* ---------- 设置面板 ---------- */
 .control-panel {
-  padding: 10px 12px 8px;
+  padding: 12px 14px 8px;
   border: 1px solid rgba(128, 128, 128, 0.18);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(128, 128, 128, 0.045);
 }
 
 .setting-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 22px;
+  gap: 10px 24px;
   align-items: center;
 }
 
 .setting {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   min-width: 0;
+}
+
+.setting-label {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(90, 90, 90, 1);
+}
+
+.quality-num {
+  margin-left: 5px;
+  padding: 0 6px;
+  border-radius: 5px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(64, 152, 252, 0.12);
+  color: #1a6fd4;
 }
 
 .scale-btns {
@@ -344,31 +378,68 @@ function errText(item: ImageItem): string {
   gap: 4px;
 }
 
-.action-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
+/* 缩放档位按钮：命中当前值时品牌蓝高亮 */
+.scale-btns .active :deep(.n-button__content) {
+  color: #1a6fd4;
+  font-weight: 600;
 }
 
-/* 导入区 */
+.panel-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.setting-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: rgba(128, 128, 128, 0.9);
+}
+
+/* ---------- 导入区 ---------- */
 .dropzone {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   padding: 30px 16px;
   border: 1.5px dashed rgba(128, 128, 128, 0.4);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition:
     border-color 0.2s,
-    background-color 0.2s;
+    background-color 0.2s,
+    padding 0.25s ease;
 }
 
-.dropzone svg {
-  width: 32px;
-  height: 32px;
-  opacity: 0.55;
+/* 已有图片时收紧高度，把空间让给卡片列表 */
+.dropzone.compact {
+  padding: 14px 16px;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.dropzone.compact .drop-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.dropzone.compact .drop-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.dropzone.compact .drop-hint {
+  display: none;
+}
+
+.dropzone:hover {
+  border-color: rgba(64, 152, 252, 0.6);
+  background: rgba(64, 152, 252, 0.04);
 }
 
 .dropzone.active {
@@ -376,30 +447,73 @@ function errText(item: ImageItem): string {
   background: rgba(64, 152, 252, 0.08);
 }
 
-/* 图片卡片 */
+.drop-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #4098fc, #22d3ee);
+  box-shadow: 0 4px 12px rgba(64, 152, 252, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.dropzone:hover .drop-icon {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.drop-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.drop-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.drop-hint {
+  font-size: 12px;
+  color: rgba(128, 128, 128, 0.9);
+}
+
+/* ---------- 图片卡片 ---------- */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px;
   min-height: 0;
 }
 
 .card {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 12px;
+  padding: 12px;
   border: 1px solid rgba(128, 128, 128, 0.18);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(128, 128, 128, 0.045);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(64, 152, 252, 0.45);
+  box-shadow: 0 6px 18px rgba(64, 152, 252, 0.12);
 }
 
 .thumb {
-  width: 64px;
-  height: 64px;
+  width: 66px;
+  height: 66px;
   flex: none;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.16);
   background: rgba(128, 128, 128, 0.1);
 }
 
@@ -408,12 +522,12 @@ function errText(item: ImageItem): string {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .name {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -422,21 +536,80 @@ function errText(item: ImageItem): string {
 .meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
   font-size: 12px;
-  color: rgba(128, 128, 128, 0.9);
+  font-variant-numeric: tabular-nums;
+  color: rgba(128, 128, 128, 0.95);
 }
 
 .tag {
   flex: none;
-  padding: 0 5px;
-  border-radius: 3px;
+  padding: 0 6px;
+  border-radius: 4px;
   font-size: 11px;
+  font-weight: 500;
   background: rgba(128, 128, 128, 0.15);
 }
 
 .tag.out {
   background: rgba(64, 152, 252, 0.15);
+  color: #1a6fd4;
+}
+
+/* 压缩结果徽章：缩小绿 / 增大黄 / 不变灰 / 错误红 */
+.delta {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.delta.good {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+}
+
+.delta.warn {
+  background: rgba(240, 180, 41, 0.18);
+  color: #a16207;
+}
+
+.delta.flat {
+  background: rgba(128, 128, 128, 0.14);
+  color: rgba(110, 110, 110, 1);
+}
+
+.delta.err {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.processing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(128, 128, 128, 0.95);
+}
+
+.processing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4098fc;
+  animation: dot-blink 1s ease-in-out infinite;
+}
+
+@keyframes dot-blink {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 .actions {
@@ -444,5 +617,59 @@ function errText(item: ImageItem): string {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* ---------- 深色模式 ---------- */
+.img-tool.dark .control-panel,
+.img-tool.dark .card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.img-tool.dark .setting-label {
+  color: rgba(210, 214, 220, 0.92);
+}
+
+.img-tool.dark .quality-num {
+  background: rgba(64, 152, 252, 0.22);
+  color: #7cb8ff;
+}
+
+.img-tool.dark .scale-btns .active :deep(.n-button__content) {
+  color: #7cb8ff;
+}
+
+.img-tool.dark .setting-hints,
+.img-tool.dark .drop-hint {
+  color: rgba(200, 204, 210, 0.65);
+}
+
+.img-tool.dark .card:hover {
+  border-color: rgba(64, 152, 252, 0.55);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.img-tool.dark .tag.out {
+  color: #7cb8ff;
+}
+
+.img-tool.dark .delta.good {
+  background: rgba(74, 222, 128, 0.16);
+  color: #7be0a0;
+}
+
+.img-tool.dark .delta.warn {
+  background: rgba(240, 180, 41, 0.18);
+  color: #facc15;
+}
+
+.img-tool.dark .delta.flat {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(200, 204, 210, 0.8);
+}
+
+.img-tool.dark .delta.err {
+  background: rgba(248, 113, 113, 0.16);
+  color: #ff8a85;
 }
 </style>

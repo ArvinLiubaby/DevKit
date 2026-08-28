@@ -2,7 +2,7 @@
 
 [English](README.en.md) | **中文**
 
-![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-MIT-green) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
+![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-CC--BY--NC--4.0-orange) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
 
 **本地优先、离线可用、跨平台的开发者效率工具集。** 基于 Tauri 2 + Vue 3 构建，安装包仅约 3-5 MB，开箱即用，支持中英双语与深色模式。
 
@@ -162,4 +162,10 @@ src-tauri/          # Tauri 后端（Rust，含全局快捷键 shortcuts.rs、�
 
 ## 📄 开源协议
 
-[MIT](LICENSE)
+本项目采用 [CC BY-NC 4.0（署名-非商业性使用 4.0 国际）](LICENSE) 许可：
+
+- ✅ 允许：复制、分发、修改与演绎，用于学习、研究等**非商业用途**
+- 📝 要求：使用或分发时**注明原作者及项目出处**（署名，如：基于 [DevKit](https://github.com/ArvinLiubaby/DevKit) 修改）
+- ❌ 禁止：将本项目或衍生作品用于任何**商业用途**
+
+> 详细条款见 [LICENSE](LICENSE)，协议全文：[CC BY-NC 4.0 官方文本](https://creativecommons.org/licenses/by-nc/4.0/legalcode.zh-Hans)

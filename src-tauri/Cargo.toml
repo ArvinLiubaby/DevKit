@@ -1,7 +1,8 @@
 [package]
 name = "devkit"
-version = "0.5.3"
+version = "0.5.4"
 description = "DevKit - 本地优先、离线可用、跨平台的开发者效率工具集"
+license = "CC-BY-NC-4.0"
 authors = ["Creek"]
 edition = "2021"
 

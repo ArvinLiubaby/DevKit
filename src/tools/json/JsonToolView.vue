@@ -352,6 +352,7 @@ const outputStats = computed(() =>
     <div class="panels">
       <div class="input-panel panel">
         <div class="panel-head">
+          <span class="panel-dot in" aria-hidden="true"></span>
           <span class="panel-title">{{ t("json.inputTitle") }}</span>
         </div>
         <n-input
@@ -367,6 +368,7 @@ const outputStats = computed(() =>
       </div>
       <div class="output-panel panel">
         <div class="panel-head">
+          <span class="panel-dot out" aria-hidden="true"></span>
           <span class="panel-title">{{ t("json.outputTitle") }}</span>
           <n-text v-if="!editing" depth="3" size="small">{{ t("json.foldHint") }}</n-text>
           <n-text v-else depth="3" size="small">{{ t("json.editHint") }}</n-text>
@@ -465,7 +467,7 @@ const outputStats = computed(() =>
   margin-bottom: 10px;
   padding: 10px 12px 8px;
   border: 1px solid rgba(128, 128, 128, 0.18);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(128, 128, 128, 0.045);
 }
 
@@ -502,7 +504,7 @@ const outputStats = computed(() =>
   margin-bottom: 8px;
   padding: 5px 28px 5px 10px;
   border: 1px solid rgba(128, 128, 128, 0.22);
-  border-radius: 6px;
+  border-radius: 8px;
   background: rgba(128, 128, 128, 0.06);
   font-size: 13px;
 }
@@ -579,6 +581,24 @@ const outputStats = computed(() =>
 .panel-title {
   font-size: 13px;
   font-weight: 600;
+}
+
+/* 面板标识圆点：输入蓝 / 输出青 */
+.panel-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.panel-dot.in {
+  background: #4098fc;
+  box-shadow: 0 0 0 3px rgba(64, 152, 252, 0.18);
+}
+
+.panel-dot.out {
+  background: #22d3ee;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
 }
 
 .head-actions {

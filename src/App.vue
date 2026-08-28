@@ -19,6 +19,18 @@ const searchFocusStore = useSearchFocusStore();
 const naiveLocale = computed(() => (langStore.lang === "zh-CN" ? zhCN : enUS));
 const naiveDateLocale = computed(() => (langStore.lang === "zh-CN" ? dateZhCN : dateEnUS));
 
+// 主题覆盖：主色统一为品牌蓝（naive-ui 默认绿色），圆角贴合卡片化设计
+const themeOverrides = {
+  common: {
+    primaryColor: "#4098fc",
+    primaryColorHover: "#5aa7fd",
+    primaryColorPressed: "#2b7fe0",
+    primaryColorSuppl: "#22d3ee",
+    borderRadius: "8px",
+    borderRadiusSmall: "6px",
+  },
+};
+
 // 全局快捷键导航：Rust 侧按下快捷键后 emit 事件，这里跳转到对应工具页
 const unlisten = ref<UnlistenFn | null>(null);
 const unlistenFocus = ref<UnlistenFn | null>(null);
@@ -67,6 +79,7 @@ watch(
 <template>
   <n-config-provider
     :theme="themeStore.theme === 'dark' ? darkTheme : null"
+    :theme-overrides="themeOverrides"
     :locale="naiveLocale"
     :date-locale="naiveDateLocale"
   >

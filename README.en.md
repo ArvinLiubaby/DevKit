@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | **English**
 
-![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-MIT-green) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
+![Release](https://img.shields.io/github/v/release/ArvinLiubaby/DevKit) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-CC--BY--NC--4.0-orange) ![Downloads](https://img.shields.io/github/downloads/ArvinLiubaby/DevKit/total)
 
 **A local-first, offline, cross-platform developer toolbox.** Built with Tauri 2 + Vue 3, the installer is only ~3-5 MB and works out of the box. Supports Chinese/English bilingual UI and dark mode.
 
@@ -161,4 +161,10 @@ src-tauri/          # Tauri backend (Rust, incl. global shortcut manager shortcu
 
 ## 📄 License
 
-[MIT](LICENSE)
+This project is licensed under [CC BY-NC 4.0 (Attribution-NonCommercial 4.0 International)](LICENSE):
+
+- ✅ Allowed: copy, distribute, modify and adapt for **non-commercial** purposes such as learning and research
+- 📝 Required: **credit the original author and project** when using or redistributing (attribution, e.g. based on [DevKit](https://github.com/ArvinLiubaby/DevKit))
+- ❌ Prohibited: any **commercial use** of this project or derivative works
+
+> See [LICENSE](LICENSE) for full terms; official text: [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
